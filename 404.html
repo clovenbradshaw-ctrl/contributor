@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The Contributor — Redirecting…</title>
+
+<!-- =============================================================
+     LEGACY URL ROUTER
+     This file is served by the host whenever a request hits a path
+     that doesn't match a real file. We use it to rewrite old WordPress
+     URLs into the new site's ?slug= form, so bookmarks and inbound
+     links from before the migration keep working.
+
+     Examples:
+       /they-were-promised-apartments/     → /article.html?slug=they-were-promised-apartments
+       /our-story/programs/                → /page.html?slug=programs
+       /tag/news/                          → /                (no local archive yet)
+       /donate/                            → https://thecontributor.org/donate/   (kept on WP)
+     ============================================================= -->
+
+<script>
+(function () {
+  'use strict';
+
+  // Strip leading and trailing slashes
+  var path = location.pathname.replace(/^\/+|\/+$/g, '');
+  var search = location.search || '';
+  var hash = location.hash || '';
+
+  // -- Empty path: just send to home (shouldn't happen on real 404, but safe)
+  if (!path) {
+    location.replace('/' + search + hash);
+    return;
+  }
+
+  // -- WP page paths that map cleanly to our local page.html template.
+  //    Keys are the path AFTER stripping slashes. Values are the slug
+  //    we'll send to /wp-json/wp/v2/pages.
+  var PAGE_MAP = {
+    'our-story/programs':                          'programs',
+    'our-story/how-it-works':                      'how-it-works',
+    'meet-us':                                     'meet-us',
+    'get-involved/volunteer-with-us':              'volunteer-with-us',
+    'get-involved/intern-with-us':                 'intern-with-us',
+    'get-involved/where-to-turn-in-nashville':     'where-to-turn-in-nashville',
+    'join-our-board':                              'join-our-board',
+    'unseen-nashville-tours':                      'unseen-nashville-tours',
+    'latestevents':                                'latestevents',
+    'our-vendors/become-a-vendor':                 'become-a-vendor',
+    'advertise':                                   'advertise',
+    'subscribe-today':                             'subscribe-today',
+    'contact-us':                                  'contact-us'
+  };
+  if (PAGE_MAP[path]) {
+    location.replace('/page.html?slug=' + PAGE_MAP[path] + hash);
+    return;
+  }
+
+  // -- WP archive prefixes that we don't have local templates for yet.
+  //    Send to homepage rather than dead-end. (If we build an
+  //    archive.html later, point these there with a ?tag=, ?category= param.)
+  if (/^(tag|category|author|page)\//.test(path)) {
+    location.replace('/' + hash);
+    return;
+  }
+
+  // -- WP system paths that should bounce back to the live WordPress —
+  //    these are real flows / tools we haven't replaced.
+  var KEEP_ON_WP = ['donate', 'pay', 'our-vendors/find-a-vendor', 'subscribe-today'];
+  for (var i = 0; i < KEEP_ON_WP.length; i++) {
+    if (path === KEEP_ON_WP[i]) {
+      location.replace('https://thecontributor.org/' + KEEP_ON_WP[i] + '/' + search + hash);
+      return;
+    }
+  }
+
+  // -- WP admin / system endpoints — let WP handle them
+  if (/^(wp-admin|wp-login|wp-json|wp-content|feed|comments|xmlrpc)/.test(path)) {
+    location.replace('https://thecontributor.org/' + path + '/' + search + hash);
+    return;
+  }
+
+  // -- Anything else with a single path segment is a post slug.
+  //    e.g. /they-were-promised-apartments-they-got-evictions/
+  //    →    /article.html?slug=they-were-promised-apartments-they-got-evictions
+  if (path.indexOf('/') === -1) {
+    location.replace('/article.html?slug=' + encodeURIComponent(path) + hash);
+    return;
+  }
+
+  // -- Multi-segment paths we didn't map: take the last segment as the
+  //    best-guess slug for the article page. The article page will show
+  //    its own "not found" state if WordPress doesn't have it.
+  var segments = path.split('/');
+  var lastSeg = segments[segments.length - 1];
+  location.replace('/article.html?slug=' + encodeURIComponent(lastSeg) + hash);
+})();
+</script>
+
+<!-- Fallback for users with JS disabled — they'll see this static page
+     with a manual home link. -->
+<style>
+  body {
+    font-family: -apple-system, system-ui, sans-serif;
+    background: #F5F5F5;
+    color: #222;
+    margin: 0;
+    padding: 80px 24px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .box {
+    max-width: 480px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #222;
+    padding: 40px 28px;
+  }
+  .box h1 { font-size: 24px; margin: 0 0 12px; }
+  .box p { margin: 0 0 20px; color: #484848; }
+  .box a {
+    display: inline-block;
+    background: #FFC525;
+    color: #222;
+    padding: 12px 24px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .box a:hover { background: #222; color: #fff; }
+</style>
+</head>
+<body>
+  <div class="box">
+    <h1>Redirecting…</h1>
+    <p>If you aren't taken to the right page automatically, head home and try again.</p>
+    <a href="/">Go to homepage</a>
+  </div>
+</body>
+</html>

@@ -1,0 +1,714 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>The Contributor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================================
+     THE CONTRIBUTOR — STATIC PAGE TEMPLATE
+     Loads any WP page by ?slug=…  (programs, how-it-works, meet-us, etc.)
+     Layout dims pulled from Other - Programs / How It Works SVGs:
+       Hero block 820×461 centered, two-col 400-image + text
+     ========================================================================= */
+
+  :root {
+    --bg:           #F5F5F5;
+    --white:        #FFFFFF;
+    --ink:          #222222;
+    --yellow:       #FFC525;
+    --yellow-soft:  #FFDD72;
+    --blue:         #2275BB;
+    --text-body:    #484848;
+    --text-muted:   #808080;
+    --border:       #BEBEBE;
+
+    --container:    1282px;
+    --hero-col:     820px;
+    --body-col:     820px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--white);
+    color: var(--ink);
+    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .wrap { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+
+  /* =========================================================================
+     SHARED CHROME — header, subnav, hamburger drawer (verbatim)
+     ========================================================================= */
+  header.top { background: var(--bg); height: 100px; display: flex; align-items: center; }
+  header.top .wrap { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
+  .wordmark {
+    font-family: "UnifrakturCook", "Old English Text MT", serif;
+    font-weight: 700; font-size: 44px; line-height: 1; color: var(--ink); white-space: nowrap;
+  }
+  nav.top-nav { display: flex; align-items: center; gap: 4px; }
+  nav.top-nav .item { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 16px; font-weight: 500; color: var(--ink); cursor: pointer; }
+  nav.top-nav .caret { width: 10px; height: 10px; }
+  nav.top-nav .btn { padding: 12px 22px; font-family: "DM Sans", sans-serif; font-size: 15px; font-weight: 500; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; margin-left: 8px; }
+  nav.top-nav .btn:hover { background: var(--ink); color: var(--white); }
+  nav.top-nav .btn.primary { background: var(--yellow); border-color: var(--yellow); }
+  nav.top-nav .btn.primary:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
+  nav.top-nav .search-btn { background: none; border: 0; padding: 10px; cursor: pointer; color: var(--ink); }
+
+  .subnav { background: var(--ink); height: 50px; display: flex; align-items: center; }
+  .subnav .wrap { width: 100%; display: flex; align-items: center; gap: 36px; }
+  .subnav a { display: inline-flex; align-items: center; gap: 10px; color: var(--yellow); font-size: 14px; font-weight: 500; }
+  .subnav a:hover { color: var(--yellow-soft); }
+  .subnav svg { width: 18px; height: 18px; }
+
+  .hamburger { display: none; background: none; border: 0; width: 44px; height: 44px; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); }
+  .hamburger svg { width: 28px; height: 28px; }
+
+  .drawer { position: fixed; top: 0; right: 0; width: 100%; height: 100vh; max-width: 420px; background: var(--white); z-index: 100; transform: translateX(100%); transition: transform .3s ease; display: flex; flex-direction: column; overflow: hidden; }
+  .drawer[data-open="true"] { transform: translateX(0); }
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .drawer-overlay[data-open="true"] { opacity: 1; pointer-events: auto; }
+  .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; flex: 0 0 auto; gap: 12px; }
+  .drawer-title { display: inline-flex; align-items: center; gap: 14px; font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 22px; color: var(--ink); }
+  .drawer-title .bullet { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); flex: 0 0 22px; }
+  .drawer-logo-slot { display: inline-flex; align-items: center; justify-content: center; background: #D9D9D9; color: var(--ink); font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 16px; padding: 12px 32px; min-width: 130px; min-height: 44px; }
+  .drawer-back, .drawer-close { background: none; border: 0; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); flex: 0 0 auto; }
+  .drawer-back svg, .drawer-close svg { width: 22px; height: 22px; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 14px 20px 20px; }
+  .drawer-body ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
+  .drawer-item { display: flex; align-items: center; gap: 18px; padding: 18px 0; font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 22px; color: var(--ink); cursor: pointer; width: 100%; border: 0; background: none; text-align: left; }
+  .drawer-item .bullet { width: 18px; height: 18px; border-radius: 50%; background: var(--ink); flex: 0 0 18px; }
+  .drawer-item .grow { flex: 1; }
+  .drawer-item .caret { color: var(--ink); width: 16px; height: 16px; flex: 0 0 16px; }
+  .drawer-pane[data-pane="about"] .drawer-body, .drawer-pane[data-pane="involved"] .drawer-body { padding: 0 20px 20px; }
+  .drawer-panel { border: 1px solid var(--border); background: var(--white); padding: 22px 28px; height: 100%; overflow-y: auto; scrollbar-gutter: stable; }
+  .drawer-item.sub { font-size: 22px; font-weight: 700; padding: 18px 0; line-height: 1.25; }
+  .drawer-item.sub .bullet { display: none; }
+  .drawer-footer { flex: 0 0 auto; padding: 18px 20px 28px; }
+  .drawer-donate { display: block; width: 100%; background: var(--ink); color: var(--white); text-align: center; padding: 16px 24px; font-family: "DM Sans", sans-serif; font-weight: 500; font-size: 16px; border: 0; }
+  .drawer-donate:hover { background: var(--blue); }
+  .drawer-pane { display: none; flex-direction: column; height: 100%; }
+  .drawer-pane[data-active="true"] { display: flex; }
+
+  /* =========================================================================
+     PAGE LAYOUT — title, hero, body
+     ========================================================================= */
+  .page-shell { padding: 64px 0 80px; background: var(--white); }
+
+  .page-title {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 700;
+    font-size: clamp(48px, 6vw, 80px);
+    line-height: 1;
+    letter-spacing: -.02em;
+    text-align: center;
+    margin: 0 0 48px;
+    color: var(--ink);
+  }
+
+  .page-body {
+    max-width: var(--body-col);
+    margin: 0 auto;
+    padding: 0 24px;
+    font-family: "Source Serif 4", Georgia, serif;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--ink);
+  }
+
+  /* =========================================================================
+     PROSE — typography for WP-rendered page content
+     Supports WP's alignleft/alignright/aligncenter image classes for the
+     two-column layouts seen in the Programs design.
+     ========================================================================= */
+  .page-body p { margin: 0 0 22px; }
+  .page-body p:last-child { margin-bottom: 0; }
+  .page-body a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+
+  .page-body h2, .page-body h3, .page-body h4 {
+    font-family: "DM Sans", sans-serif;
+    font-weight: 700;
+    color: var(--ink);
+    margin: 48px 0 18px;
+    line-height: 1.2;
+    clear: both;
+  }
+  .page-body h2 { font-size: 32px; letter-spacing: -.01em; }
+  .page-body h3 { font-size: 24px; }
+  .page-body h4 { font-size: 19px; }
+
+  .page-body ul, .page-body ol { margin: 0 0 22px; padding-left: 24px; }
+  .page-body li { margin-bottom: 8px; }
+
+  /* WP image alignment — two-column layouts */
+  .page-body img,
+  .page-body figure {
+    max-width: 100%; height: auto; display: block;
+  }
+  .page-body img.aligncenter,
+  .page-body figure.aligncenter,
+  .page-body .wp-block-image.aligncenter,
+  .page-body .wp-caption.aligncenter { margin: 32px auto; text-align: center; }
+  .page-body img.alignleft,
+  .page-body figure.alignleft,
+  .page-body .wp-block-image.alignleft,
+  .page-body .wp-caption.alignleft {
+    float: left;
+    margin: 8px 32px 24px 0;
+    max-width: 400px;
+  }
+  .page-body img.alignright,
+  .page-body figure.alignright,
+  .page-body .wp-block-image.alignright,
+  .page-body .wp-caption.alignright {
+    float: right;
+    margin: 8px 0 24px 32px;
+    max-width: 400px;
+  }
+  .page-body figure { margin: 32px 0; }
+  .page-body figcaption {
+    font-style: italic; font-size: 14px; color: var(--text-body);
+    margin-top: 8px; text-align: right;
+  }
+
+  /* WP video / iframe embeds */
+  .page-body iframe,
+  .page-body .wp-block-embed,
+  .page-body .wp-block-embed__wrapper {
+    max-width: 100%;
+  }
+  .page-body iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    height: auto;
+    border: 0;
+    margin: 0 auto;
+    display: block;
+  }
+  .page-body .wp-block-embed {
+    margin: 32px auto;
+  }
+
+  /* WP block quotes / pull quotes */
+  .page-body blockquote,
+  .page-body .wp-block-quote {
+    margin: 32px 0;
+    padding-left: 24px;
+    border-left: 3px solid var(--yellow);
+    font-style: italic;
+    font-size: 19px;
+    color: var(--ink);
+  }
+  .page-body .wp-block-pullquote {
+    text-align: center;
+    margin: 48px auto;
+    padding: 32px 24px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    border-left: 0; border-right: 0;
+    font-family: "Source Serif 4", Georgia, serif;
+    font-style: italic;
+    font-size: clamp(22px, 2.6vw, 32px);
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .page-body .wp-block-pullquote cite {
+    display: block;
+    font-style: normal;
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 14px;
+    font-family: "DM Sans", sans-serif;
+  }
+
+  /* Horizontal rules */
+  .page-body hr {
+    border: 0;
+    border-top: 1px solid var(--border);
+    margin: 48px auto;
+    max-width: 100%;
+  }
+
+  /* Hero block — first image / video sits in a wider column */
+  .page-body > p:first-of-type img,
+  .page-body > p:first-of-type iframe,
+  .page-body > .wp-block-embed:first-child,
+  .page-body > .wp-block-image:first-child img,
+  .page-body > figure:first-of-type {
+    max-width: var(--hero-col);
+    width: 100%;
+  }
+
+  /* =========================================================================
+     FOOTER — verbatim
+     ========================================================================= */
+  footer.site { background: var(--ink); color: var(--white); padding: 64px 0 28px; margin-top: 48px; }
+  footer.site .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 56px; margin-bottom: 48px; }
+  footer.site .wordmark { color: var(--white); margin-bottom: 28px; display: inline-block; }
+  footer.site h5 { font-family: "DM Sans", sans-serif; font-style: italic; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--yellow-soft); margin: 0 0 12px; }
+  footer.site .mission { font-family: "Source Serif 4", Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.4; margin: 0 0 28px; color: var(--white); max-width: 460px; }
+  footer.site address { font-family: "DM Sans", sans-serif; font-style: normal; font-size: 14px; line-height: 1.6; color: var(--white); }
+  footer.site address a { color: var(--white); }
+  footer.site address a:hover { color: var(--yellow-soft); }
+  footer.site .socials { display: flex; gap: 12px; margin-top: 16px; }
+  footer.site .socials a { width: 32px; height: 32px; background: var(--yellow-soft); color: var(--ink); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
+  footer.site .socials a:hover { background: var(--yellow); }
+  footer.site .socials svg { width: 16px; height: 16px; }
+  footer.site .colophon { font-family: "DM Sans", sans-serif; font-size: 13px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,.12); padding-top: 24px; text-align: center; }
+  @media (max-width: 880px) { footer.site .cols { grid-template-columns: 1fr; gap: 36px; } }
+
+  /* =========================================================================
+     LOADING / ERROR
+     ========================================================================= */
+  .skeleton { background: linear-gradient(90deg, #ECECEC 0%, #DEDEDE 50%, #ECECEC 100%); background-size: 200% 100%; animation: shimmer 1.6s infinite; }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+  .error-box { background: var(--white); border: 1px solid var(--ink); padding: 32px; max-width: var(--body-col); margin: 32px auto; }
+  .error-box .label { font-family: "DM Sans", sans-serif; font-style: italic; font-weight: 700; text-transform: uppercase; color: var(--blue); font-size: 13px; letter-spacing: .12em; margin-bottom: 12px; }
+  .error-box h3 { font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 26px; margin: 0 0 14px; color: var(--ink); }
+  .error-box p { font-family: "Source Serif 4", serif; font-size: 16px; color: var(--text-body); margin: 0 0 12px; }
+  .error-box code { font-family: ui-monospace, monospace; font-size: 13px; background: var(--bg); padding: 2px 6px; border: 1px solid var(--border); }
+  .error-box .actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
+  .error-box button { font-family: "DM Sans", sans-serif; font-size: 14px; font-weight: 500; padding: 10px 20px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; }
+  .error-box button.primary { background: var(--yellow); }
+  .error-box button:hover { background: var(--ink); color: var(--white); }
+
+  [hidden] { display: none !important; }
+
+  /* =========================================================================
+     MOBILE
+     ========================================================================= */
+  @media (max-width: 980px) {
+    nav.top-nav .item:not(.btn) { display: none; }
+    .wordmark { font-size: 36px; }
+  }
+  @media (max-width: 720px) {
+    header.top { height: 70px; }
+    .wordmark { font-size: 28px; }
+    nav.top-nav { display: none; }
+    .hamburger { display: inline-flex; }
+    .subnav { display: none; }
+
+    .page-shell { padding: 32px 0 48px; }
+    .page-title { font-size: 38px; margin-bottom: 32px; }
+    .page-body { font-size: 16px; line-height: 1.6; }
+
+    /* Disable image floats on mobile — stack everything */
+    .page-body img.alignleft, .page-body img.alignright,
+    .page-body figure.alignleft, .page-body figure.alignright,
+    .page-body .wp-block-image.alignleft, .page-body .wp-block-image.alignright {
+      float: none;
+      margin: 24px auto;
+      max-width: 100%;
+    }
+    .page-body h2 { font-size: 24px; }
+    .page-body h3 { font-size: 20px; }
+    .page-body .wp-block-pullquote { font-size: 22px; padding: 24px 16px; }
+  }
+
+  /* =========================================================================
+     TOP-NAV DROPDOWNS — About Us / Get Involved
+     ========================================================================= */
+  .nav-group { position: relative; display: inline-block; }
+  .nav-trigger {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 18px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 16px; font-weight: 500;
+    color: var(--ink);
+    background: none; border: 0;
+    cursor: pointer;
+  }
+  .nav-trigger .caret { transition: transform .2s; }
+  .nav-trigger[aria-expanded="true"] .caret { transform: rotate(180deg); }
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    min-width: 240px;
+    background: var(--white);
+    border: 1px solid var(--ink);
+    box-shadow: 4px 4px 0 rgba(0,0,0,.1);
+    padding: 10px 0;
+    z-index: 30;
+    display: none;
+  }
+  .nav-group[data-open="true"] .nav-dropdown { display: block; }
+  .nav-dropdown a {
+    display: block;
+    padding: 10px 22px;
+    font-family: "DM Sans", sans-serif;
+    font-size: 15px; font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+  }
+  .nav-dropdown a:hover { background: var(--bg); color: var(--blue); }
+  @media (max-width: 720px) {
+    .nav-group { display: none; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     CHROME
+     ============================================================ -->
+<header class="top">
+  <div class="wrap">
+    <a href="index.html" class="wordmark">The Contributor</a>
+    <nav class="top-nav">
+            <div class="nav-group" data-nav="about">
+        <button class="nav-trigger" aria-expanded="false" aria-haspopup="true">About Us
+          <svg class="caret" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg" width="10" height="6">
+            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown">
+          <a href="page.html?slug=programs">Programs</a>
+          <a href="page.html?slug=how-it-works">How it Works</a>
+          <a href="page.html?slug=meet-us">Our Team &amp; Values</a>
+          <a href="page.html?slug=where-to-turn-in-nashville">Where to Turn in Nashville</a>
+        </div>
+      </div>
+            <div class="nav-group" data-nav="involved">
+        <button class="nav-trigger" aria-expanded="false" aria-haspopup="true">Get Involved
+          <svg class="caret" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg" width="10" height="6">
+            <path d="M1 1L6 6L11 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="nav-dropdown">
+          <a href="page.html?slug=latestevents">Latest Events</a>
+          <a href="page.html?slug=volunteer-with-us">Volunteer With Us</a>
+          <a href="page.html?slug=intern-with-us">Intern With Us</a>
+          <a href="page.html?slug=join-our-board">Join Our Board</a>
+          <a href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a>
+        </div>
+      </div>
+      <a href="https://thecontributor.org/donate/" class="btn">Donate</a>
+      <a href="https://thecontributor.org/pay/" class="btn primary">Buy a Paper</a>
+      <button class="search-btn" aria-label="Search">
+        <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/><line x1="13.5" y1="13.5" x2="17.5" y2="17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </nav>
+    <button class="hamburger" id="hamburger-btn" aria-label="Open menu" aria-controls="drawer">
+      <svg viewBox="0 0 28 28" fill="none"><line x1="4" y1="8" x2="24" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4" y1="14" x2="24" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="4" y1="20" x2="24" y2="20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="drawer-overlay" id="drawer-overlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-pane" data-active="true" data-pane="top">
+    <div class="drawer-header">
+      <span class="drawer-logo-slot">Logo</span>
+      <button class="drawer-close" aria-label="Close menu">
+        <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="drawer-body">
+      <ul>
+        <li><button class="drawer-item" data-go="about"><span class="bullet"></span><span class="grow">About Us</span><svg class="caret" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></li>
+        <li><button class="drawer-item" data-go="involved"><span class="bullet"></span><span class="grow">Get Involved</span><svg class="caret" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></li>
+        <li><a class="drawer-item" href="#"><span class="bullet"></span><span class="grow">Search</span></a></li>
+        <li><a class="drawer-item" href="https://thecontributor.org/our-vendors/find-a-vendor/"><span class="bullet"></span><span class="grow">Find a Paper</span></a></li>
+        <li><a class="drawer-item" href="page.html?slug=become-a-vendor"><span class="bullet"></span><span class="grow">Become a Vendor</span></a></li>
+        <li><a class="drawer-item" href="https://thecontributor.org/tag/vendor-spotlight/"><span class="bullet"></span><span class="grow">Vendor Spotlight</span></a></li>
+      </ul>
+    </div>
+    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a></div>
+  </div>
+  <div class="drawer-pane" data-pane="about">
+    <div class="drawer-header">
+      <button class="drawer-back" aria-label="Back" data-back><svg viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <span class="drawer-title"><span class="bullet"></span>About Us</span>
+      <button class="drawer-close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-panel">
+        <ul>
+          <li><a class="drawer-item sub" href="page.html?slug=programs">Programs</a></li>
+          <li><a class="drawer-item sub" href="page.html?slug=how-it-works">How it Works</a></li>
+          <li><a class="drawer-item sub" href="page.html?slug=meet-us">Our Team &amp; Values</a></li>
+          <li><a class="drawer-item sub" href="page.html?slug=where-to-turn-in-nashville">Where to Turn in Nashville</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a></div>
+  </div>
+  <div class="drawer-pane" data-pane="involved">
+    <div class="drawer-header">
+      <button class="drawer-back" aria-label="Back" data-back><svg viewBox="0 0 24 24" fill="none"><path d="M14 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+      <span class="drawer-title"><span class="bullet"></span>Get Involved</span>
+      <button class="drawer-close" aria-label="Close menu"><svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="drawer-body">
+      <div class="drawer-panel">
+        <ul>
+          <li><a class="drawer-item sub" href="page.html?slug=latestevents">Latest Events</a></li>
+          <li><a class="drawer-item sub" href="page.html?slug=volunteer-with-us">Volunteer With Us</a></li>
+          <li><a class="drawer-item sub" href="page.html?slug=intern-with-us">Intern With Us</a></li>
+          <li><a class="drawer-item sub" href="page.html?slug=join-our-board">Join Our Board</a></li>
+          <li><a class="drawer-item sub" href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a></div>
+  </div>
+</aside>
+
+<div class="subnav">
+  <div class="wrap">
+    <a href="https://thecontributor.org/our-vendors/find-a-vendor/"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-7.58 8-13a8 8 0 1 0-16 0c0 5.42 8 13 8 13z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>Find a Paper</a>
+    <a href="page.html?slug=become-a-vendor"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="9" r="2.2" stroke="currentColor" stroke-width="1.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M14 14c2 .3 4.5 1.7 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Become a Vendor</a>
+    <a href="https://thecontributor.org/tag/vendor-spotlight/"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.2L18 8l-3 3.4.7 4.6L12 14l-3.7 2 .7-4.6L6 8l4.2-.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Vendor Spotlight</a>
+  </div>
+</div>
+
+<!-- ============================================================
+     PAGE
+     ============================================================ -->
+<main class="page-shell">
+
+  <div id="loading" style="max-width:820px; margin:0 auto; padding: 0 24px;">
+    <div class="skeleton" style="height:64px; width:50%; margin: 0 auto 48px"></div>
+    <div class="skeleton" style="height:380px; margin-bottom: 32px"></div>
+    <div class="skeleton" style="height:14px; margin-bottom: 8px"></div>
+    <div class="skeleton" style="height:14px; margin-bottom: 8px"></div>
+    <div class="skeleton" style="height:14px; width:75%; margin-bottom: 24px"></div>
+    <div class="skeleton" style="height:14px; margin-bottom: 8px"></div>
+    <div class="skeleton" style="height:14px; width:90%"></div>
+  </div>
+
+  <div id="error" hidden></div>
+
+  <article id="content" hidden>
+    <h1 class="page-title" id="title"></h1>
+    <div class="page-body" id="body"></div>
+  </article>
+</main>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="cols">
+      <div>
+        <span class="wordmark">The Contributor</span>
+        <h5>Our Mission</h5>
+        <p class="mission">Empowering our homeless neighbors to achieve income, dignity, housing and community.</p>
+        <h5>Our Vision</h5>
+        <p class="mission">Bringing the community together to make homelessness a brief, rare occurrence.</p>
+      </div>
+      <div>
+        <h5>Mailing Address</h5>
+        <address>The Contributor<br>P.O. Box 332023<br>Nashville, TN 37203</address>
+      </div>
+      <div>
+        <h5>Vendor Sales Office</h5>
+        <address>154 Rep. John Lewis Way N.<br>Nashville, TN 37216<br><a href="mailto:info@thecontributor.org">info@thecontributor.org</a><br>(615) 829-6829</address>
+        <h5 style="margin-top:24px">Follow Us</h5>
+        <div class="socials">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7c0-1 .5-2 2-2h2V1h-3c-3 0-5 2-5 5v4H6v4h3v8h4z"/></svg></a>
+          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6c-.5.7-1 1-1.5 1.5.5 7-5 12-12 12-2 0-4-.5-5.5-1.5 2 .5 5 0 6.5-1-2 0-3.5-1.5-4-3 .5 0 1 0 2-.5-2 0-4-2-4-4 1 .5 1 .5 2 .5C1 9 1 6 2 4c2 3 5.5 5 9 5-.5-3 2-5 4.5-5 1 0 2 .5 3 1 1-.5 2-.5 3-1-.5 1-1 2-2 2.5.5 0 1.5-.5 2-1z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 4c.5 2 2 3.5 4 4v3.5c-1.5 0-3-.5-4-1V16c0 3-2.5 5.5-5.5 5.5S5 19 5 16s2.5-5.5 5.5-5.5c.5 0 1 0 1.5.2V14c-.5-.2-1-.3-1.5-.3-1.3 0-2.4 1-2.4 2.3s1 2.3 2.4 2.3c1.3 0 2.4-1 2.4-2.3V4h3z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="colophon">© Copyright 2026, The Contributor</div>
+  </div>
+</footer>
+
+<!-- =========================================================================
+     SCRIPT
+     ========================================================================= -->
+<script>
+(function() {
+  'use strict';
+
+  const API = 'https://thecontributor.org/wp-json/wp/v2/pages';
+  const $ = id => document.getElementById(id);
+
+  function decode(html) {
+    const t = document.createElement('textarea');
+    t.innerHTML = html || '';
+    return t.value;
+  }
+
+  /* ---------- error ---------- */
+  function showError(err, attemptedProxy) {
+    $('loading').hidden = true;
+    $('content').hidden = true;
+    const box = $('error');
+    box.hidden = false;
+    const msg = (err && err.message) || String(err);
+    const isCors = /cors|fetch|networkerror|failed to fetch/i.test(msg);
+    const isNotFound = /not found|404/i.test(msg);
+    box.innerHTML = `
+      <div class="error-box">
+        <div class="label">Press Run Down</div>
+        <h3>${isNotFound ? 'Page not found.' : 'Couldn\'t load this page.'}</h3>
+        ${isNotFound
+          ? '<p>No published page matches that slug. Try <code>?slug=programs</code> or <code>?slug=how-it-works</code>.</p>'
+          : `<p>${isCors ? 'CORS block — browser refused the cross-origin request to ' : 'Request failed for '}<code>thecontributor.org/wp-json</code>.</p>`}
+        <p><strong>Error:</strong> <code>${msg}</code></p>
+        <div class="actions">
+          ${attemptedProxy
+            ? '<button class="primary" onclick="location.reload()">Reload</button>'
+            : '<button class="primary" id="retry-proxy">Retry via CORS Proxy →</button><button onclick="location.reload()">Reload</button>'}
+        </div>
+      </div>
+    `;
+    if (!attemptedProxy) {
+      $('retry-proxy').addEventListener('click', () => load(true));
+    }
+  }
+
+  /* ---------- render ---------- */
+  function renderPage(page) {
+    const titleText = decode(page.title.rendered);
+    $('title').textContent = titleText;
+    document.title = titleText + ' — The Contributor';
+
+    // Body content from WP — drop in HTML and let prose styles handle it
+    $('body').innerHTML = page.content.rendered || '';
+
+    // Strip any inline width/height attributes from images so our CSS rules
+    // (max-width:100%) take precedence
+    $('body').querySelectorAll('img').forEach(im => {
+      im.removeAttribute('width');
+      im.removeAttribute('height');
+      im.style.removeProperty('width');
+      im.style.removeProperty('height');
+    });
+
+    // Make iframes (YouTube embeds etc.) scale fluidly
+    $('body').querySelectorAll('iframe').forEach(f => {
+      f.removeAttribute('width');
+      f.removeAttribute('height');
+    });
+
+    // Force any links inside the page body to open in this tab
+    // unless they're external — leave WP-internal links alone for now
+    $('body').querySelectorAll('a').forEach(a => {
+      const href = a.getAttribute('href') || '';
+      if (href.startsWith('http') && !href.includes('thecontributor.org')) {
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+      }
+    });
+  }
+
+  /* ---------- fetch ---------- */
+  async function load(useProxy) {
+    $('loading').hidden = false;
+    $('error').hidden = true;
+    $('content').hidden = true;
+
+    const params = new URLSearchParams(location.search);
+    const slug = params.get('slug') || 'programs'; // sensible default
+    const id = params.get('id');
+
+    let url;
+    if (id) {
+      url = `${API}/${encodeURIComponent(id)}`;
+    } else {
+      url = `${API}?slug=${encodeURIComponent(slug)}`;
+    }
+
+    const finalUrl = useProxy ? 'https://corsproxy.io/?' + encodeURIComponent(url) : url;
+
+    try {
+      const res = await fetch(finalUrl, { headers: { 'Accept': 'application/json' } });
+      if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+      const data = await res.json();
+      const page = Array.isArray(data) ? data[0] : data;
+      if (!page || !page.id) throw new Error('Page not found for slug "' + slug + '"');
+
+      renderPage(page);
+
+      $('loading').hidden = true;
+      $('content').hidden = false;
+    } catch (err) {
+      console.error('[page]', err);
+      showError(err, useProxy === true);
+    }
+  }
+
+  /* ---------- drawer ---------- */
+  function initDrawer() {
+    const drawer = $('drawer');
+    const overlay = $('drawer-overlay');
+    const hamburger = $('hamburger-btn');
+    if (!drawer || !hamburger) return;
+    const setPane = (n) => drawer.querySelectorAll('.drawer-pane').forEach(p => p.setAttribute('data-active', p.getAttribute('data-pane')===n?'true':'false'));
+    const open = (pane) => { drawer.setAttribute('data-open','true'); overlay.setAttribute('data-open','true'); document.body.style.overflow='hidden'; setPane(pane||'top'); };
+    const close = () => { drawer.setAttribute('data-open','false'); overlay.setAttribute('data-open','false'); document.body.style.overflow=''; };
+    hamburger.addEventListener('click', () => open('top'));
+    overlay.addEventListener('click', close);
+    drawer.querySelectorAll('.drawer-close').forEach(b => b.addEventListener('click', close));
+    drawer.querySelectorAll('[data-back]').forEach(b => b.addEventListener('click', () => setPane('top')));
+    drawer.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => setPane(b.getAttribute('data-go'))));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && drawer.getAttribute('data-open')==='true') close(); });
+    const wanted = new URLSearchParams(location.search).get('drawer');
+    if (wanted && ['top','about','involved'].includes(wanted)) {
+      hamburger.style.display = 'inline-flex';
+      open(wanted);
+    }
+  }
+
+
+  /* ---------- top-nav dropdowns ---------- */
+  function initNavDropdowns() {
+    const groups = document.querySelectorAll('.nav-group');
+    if (!groups.length) return;
+    const closeAll = () => groups.forEach(g => {
+      g.setAttribute('data-open', 'false');
+      const t = g.querySelector('.nav-trigger');
+      if (t) t.setAttribute('aria-expanded', 'false');
+    });
+    groups.forEach(g => {
+      const trigger = g.querySelector('.nav-trigger');
+      if (!trigger) return;
+      const toggle = (forceOpen) => {
+        const isOpen = forceOpen !== undefined ? forceOpen : g.getAttribute('data-open') !== 'true';
+        closeAll();
+        if (isOpen) {
+          g.setAttribute('data-open', 'true');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+      };
+      trigger.addEventListener('click', e => { e.stopPropagation(); toggle(); });
+      g.addEventListener('mouseenter', () => toggle(true));
+      g.addEventListener('mouseleave', () => toggle(false));
+    });
+    document.addEventListener('click', e => {
+      if (!e.target.closest('.nav-group')) closeAll();
+    });
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeAll();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initDrawer();
+    initNavDropdowns();
+    load(false);
+  });
+})();
+</script>
+
+</body>
+</html>
