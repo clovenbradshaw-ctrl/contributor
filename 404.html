@@ -16,8 +16,8 @@
      Examples:
        /they-were-promised-apartments/     → /article.html?slug=they-were-promised-apartments
        /our-story/programs/                → /page.html?slug=programs
-       /tag/news/                          → /                (no local archive yet)
-       /donate/                            → https://thecontributor.org/donate/   (kept on WP)
+       /tag/news/                          → /index.html?tag=news
+       /donate/                            → /page.html?slug=donate
      ============================================================= -->
 
 <script>
@@ -39,6 +39,8 @@
   //    Keys are the path AFTER stripping slashes. Values are the slug
   //    we'll send to /wp-json/wp/v2/pages.
   var PAGE_MAP = {
+    'donate':                                      'donate',
+    'pay':                                         'pay',
     'our-story/programs':                          'programs',
     'our-story/how-it-works':                      'how-it-works',
     'meet-us':                                     'meet-us',
@@ -49,6 +51,7 @@
     'unseen-nashville-tours':                      'unseen-nashville-tours',
     'latestevents':                                'latestevents',
     'our-vendors/become-a-vendor':                 'become-a-vendor',
+    'our-vendors/find-a-vendor':                   'find-a-vendor',
     'advertise':                                   'advertise',
     'subscribe-today':                             'subscribe-today',
     'contact-us':                                  'contact-us'
@@ -58,22 +61,19 @@
     return;
   }
 
-  // -- WP archive prefixes that we don't have local templates for yet.
-  //    Send to homepage rather than dead-end. (If we build an
-  //    archive.html later, point these there with a ?tag=, ?category= param.)
-  if (/^(tag|category|author|page)\//.test(path)) {
+  // -- Tag / category / author archives → homepage with a filter param.
+  var ARCHIVE = path.match(/^(tag|category|author)\/([^\/]+)/);
+  if (ARCHIVE) {
+    location.replace('/index.html?' + ARCHIVE[1] + '=' + encodeURIComponent(ARCHIVE[2]) + hash);
+    return;
+  }
+  if (/^page\//.test(path)) {
     location.replace('/' + hash);
     return;
   }
-
-  // -- WP system paths that should bounce back to the live WordPress —
-  //    these are real flows / tools we haven't replaced.
-  var KEEP_ON_WP = ['donate', 'pay', 'our-vendors/find-a-vendor', 'subscribe-today'];
-  for (var i = 0; i < KEEP_ON_WP.length; i++) {
-    if (path === KEEP_ON_WP[i]) {
-      location.replace('https://thecontributor.org/' + KEEP_ON_WP[i] + '/' + search + hash);
-      return;
-    }
+  if (path === 'our-paper') {
+    location.replace('/' + hash);
+    return;
   }
 
   // -- WP admin / system endpoints — let WP handle them
