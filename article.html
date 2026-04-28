@@ -434,7 +434,7 @@
      ============================================================ -->
 <header class="top">
   <div class="wrap">
-    <a href="contributor-reskin.html" class="wordmark">The Contributor</a>
+    <a href="index.html" class="wordmark">The Contributor</a>
     <nav class="top-nav">
       <span class="item">About Us
         <svg class="caret" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -815,7 +815,7 @@
       const cat = getCategory(p);
       const card = document.createElement('a');
       card.className = 'related-card';
-      card.href = p.link;
+      card.href = 'article.html?slug=' + encodeURIComponent(p.slug);
       card.innerHTML = `
         <span class="section-label">${(cat.name || '').toUpperCase()}</span>
         <h3>${decode(p.title.rendered)}</h3>
@@ -827,7 +827,7 @@
     // Set up "Next Article →" → first related post
     const next = others[0];
     if (next) {
-      $('next-article').href = next.link;
+      $('next-article').href = 'article.html?slug=' + encodeURIComponent(next.slug);
       $('next-article').hidden = false;
     }
   }
