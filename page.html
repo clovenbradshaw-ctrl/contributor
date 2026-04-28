@@ -395,8 +395,8 @@
           <a href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a>
         </div>
       </div>
-      <a href="https://thecontributor.org/donate/" class="btn">Donate</a>
-      <a href="https://thecontributor.org/pay/" class="btn primary">Buy a Paper</a>
+      <a href="page.html?slug=donate" class="btn">Donate</a>
+      <a href="page.html?slug=pay" class="btn primary">Buy a Paper</a>
       <button class="search-btn" aria-label="Search">
         <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/><line x1="13.5" y1="13.5" x2="17.5" y2="17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
@@ -421,12 +421,12 @@
         <li><button class="drawer-item" data-go="about"><span class="bullet"></span><span class="grow">About Us</span><svg class="caret" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></li>
         <li><button class="drawer-item" data-go="involved"><span class="bullet"></span><span class="grow">Get Involved</span><svg class="caret" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></li>
         <li><a class="drawer-item" href="#"><span class="bullet"></span><span class="grow">Search</span></a></li>
-        <li><a class="drawer-item" href="https://thecontributor.org/our-vendors/find-a-vendor/"><span class="bullet"></span><span class="grow">Find a Paper</span></a></li>
+        <li><a class="drawer-item" href="page.html?slug=find-a-vendor"><span class="bullet"></span><span class="grow">Find a Paper</span></a></li>
         <li><a class="drawer-item" href="page.html?slug=become-a-vendor"><span class="bullet"></span><span class="grow">Become a Vendor</span></a></li>
-        <li><a class="drawer-item" href="https://thecontributor.org/tag/vendor-spotlight/"><span class="bullet"></span><span class="grow">Vendor Spotlight</span></a></li>
+        <li><a class="drawer-item" href="index.html?tag=vendor-spotlight"><span class="bullet"></span><span class="grow">Vendor Spotlight</span></a></li>
       </ul>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="about">
     <div class="drawer-header">
@@ -444,7 +444,7 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="involved">
     <div class="drawer-header">
@@ -463,15 +463,15 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
 </aside>
 
 <div class="subnav">
   <div class="wrap">
-    <a href="https://thecontributor.org/our-vendors/find-a-vendor/"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-7.58 8-13a8 8 0 1 0-16 0c0 5.42 8 13 8 13z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>Find a Paper</a>
+    <a href="page.html?slug=find-a-vendor"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-7.58 8-13a8 8 0 1 0-16 0c0 5.42 8 13 8 13z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>Find a Paper</a>
     <a href="page.html?slug=become-a-vendor"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="9" r="2.2" stroke="currentColor" stroke-width="1.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M14 14c2 .3 4.5 1.7 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Become a Vendor</a>
-    <a href="https://thecontributor.org/tag/vendor-spotlight/"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.2L18 8l-3 3.4.7 4.6L12 14l-3.7 2 .7-4.6L6 8l4.2-.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Vendor Spotlight</a>
+    <a href="index.html?tag=vendor-spotlight"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.2L18 8l-3 3.4.7 4.6L12 14l-3.7 2 .7-4.6L6 8l4.2-.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Vendor Spotlight</a>
   </div>
 </div>
 
@@ -538,8 +538,44 @@
 (function() {
   'use strict';
 
-  const API = 'https://thecontributor.org/wp-json/wp/v2/pages';
+  const WP_BASE = 'https://thecontributor.org';
+  const API = WP_BASE + '/wp-json/wp/v2/pages';
   const $ = id => document.getElementById(id);
+
+  /* ---------- map any thecontributor.org URL to a local route ---------- */
+  function localize(url) {
+    if (!url || typeof url !== 'string') return url || '#';
+    if (url.indexOf('thecontributor.org') === -1) return url;
+    let path;
+    try { path = new URL(url, WP_BASE).pathname; }
+    catch (e) { return url; }
+    path = path.replace(/^\/+|\/+$/g, '');
+    if (!path) return 'index.html';
+    const PAGES = {
+      'donate':'donate','pay':'pay',
+      'our-vendors/find-a-vendor':'find-a-vendor',
+      'our-vendors/become-a-vendor':'become-a-vendor',
+      'our-story/programs':'programs','our-story/how-it-works':'how-it-works',
+      'meet-us':'meet-us',
+      'get-involved/volunteer-with-us':'volunteer-with-us',
+      'get-involved/intern-with-us':'intern-with-us',
+      'get-involved/where-to-turn-in-nashville':'where-to-turn-in-nashville',
+      'where-to-turn-in-nashville':'where-to-turn-in-nashville',
+      'join-our-board':'join-our-board',
+      'unseen-nashville-tours':'unseen-nashville-tours',
+      'latestevents':'latestevents','advertise':'advertise',
+      'subscribe-today':'subscribe-today','contact-us':'contact-us'
+    };
+    if (PAGES[path]) return 'page.html?slug=' + PAGES[path];
+    let m;
+    if ((m = path.match(/^tag\/([^\/]+)/)))      return 'index.html?tag=' + encodeURIComponent(m[1]);
+    if ((m = path.match(/^category\/([^\/]+)/))) return 'index.html?category=' + encodeURIComponent(m[1]);
+    if ((m = path.match(/^author\/([^\/]+)/)))   return 'index.html?author=' + encodeURIComponent(m[1]);
+    if (path === 'our-paper') return 'index.html';
+    if (path.indexOf('/') === -1) return 'article.html?slug=' + encodeURIComponent(path);
+    const parts = path.split('/');
+    return 'article.html?slug=' + encodeURIComponent(parts[parts.length - 1]);
+  }
 
   function decode(html) {
     const t = document.createElement('textarea');
@@ -600,11 +636,14 @@
       f.removeAttribute('height');
     });
 
-    // Force any links inside the page body to open in this tab
-    // unless they're external — leave WP-internal links alone for now
+    // Rewrite WP-internal links to local routes; mark truly external links.
     $('body').querySelectorAll('a').forEach(a => {
       const href = a.getAttribute('href') || '';
-      if (href.startsWith('http') && !href.includes('thecontributor.org')) {
+      if (href.includes('thecontributor.org')) {
+        a.setAttribute('href', localize(href));
+        a.removeAttribute('target');
+        a.removeAttribute('rel');
+      } else if (href.startsWith('http')) {
         a.target = '_blank';
         a.rel = 'noopener noreferrer';
       }

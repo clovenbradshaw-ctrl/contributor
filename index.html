@@ -880,8 +880,8 @@
           <a href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a>
         </div>
       </div>
-      <a href="https://thecontributor.org/donate/" class="btn">Donate</a>
-      <a href="https://thecontributor.org/pay/" class="btn primary">Buy a Paper</a>
+      <a href="page.html?slug=donate" class="btn">Donate</a>
+      <a href="page.html?slug=pay" class="btn primary">Buy a Paper</a>
       <button class="search-btn" aria-label="Search">
         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
           <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
@@ -937,7 +937,7 @@
           <span class="bullet"></span>
           <span class="grow">Search</span>
         </a></li>
-        <li><a class="drawer-item" href="https://thecontributor.org/our-vendors/find-a-vendor/">
+        <li><a class="drawer-item" href="page.html?slug=find-a-vendor">
           <span class="bullet"></span>
           <span class="grow">Find a Paper</span>
         </a></li>
@@ -945,14 +945,14 @@
           <span class="bullet"></span>
           <span class="grow">Become a Vendor</span>
         </a></li>
-        <li><a class="drawer-item" href="https://thecontributor.org/tag/vendor-spotlight/">
+        <li><a class="drawer-item" href="index.html?tag=vendor-spotlight">
           <span class="bullet"></span>
           <span class="grow">Vendor Spotlight</span>
         </a></li>
       </ul>
     </div>
     <div class="drawer-footer">
-      <a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a>
+      <a class="drawer-donate" href="page.html?slug=donate">Donate</a>
     </div>
   </div>
 
@@ -983,7 +983,7 @@
       </div>
     </div>
     <div class="drawer-footer">
-      <a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a>
+      <a class="drawer-donate" href="page.html?slug=donate">Donate</a>
     </div>
   </div>
 
@@ -1015,7 +1015,7 @@
       </div>
     </div>
     <div class="drawer-footer">
-      <a class="drawer-donate" href="https://thecontributor.org/donate/">Donate</a>
+      <a class="drawer-donate" href="page.html?slug=donate">Donate</a>
     </div>
   </div>
 
@@ -1026,7 +1026,7 @@
      ============================================================ -->
 <div class="subnav">
   <div class="wrap">
-    <a href="https://thecontributor.org/our-vendors/find-a-vendor/">
+    <a href="page.html?slug=find-a-vendor">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 22s8-7.58 8-13a8 8 0 1 0-16 0c0 5.42 8 13 8 13z" stroke="currentColor" stroke-width="1.5"/>
         <circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/>
@@ -1041,7 +1041,7 @@
       </svg>
       Become a Vendor
     </a>
-    <a href="https://thecontributor.org/tag/vendor-spotlight/">
+    <a href="index.html?tag=vendor-spotlight">
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 3l1.8 4.2L18 8l-3 3.4.7 4.6L12 14l-3.7 2 .7-4.6L6 8l4.2-.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
       </svg>
@@ -1067,11 +1067,11 @@
     </button>
     <div class="filters-popover" id="filters-popover">
       <ul>
-        <li><a href="https://thecontributor.org/tag/news/" class="active">News</a></li>
-        <li><a href="https://thecontributor.org/tag/feature/">Features</a></li>
-        <li><a href="https://thecontributor.org/tag/vendor-spotlight/">Vendor Spotlight</a></li>
-        <li><a href="https://thecontributor.org/tag/vendor-writing/">Vendor Writing</a></li>
-        <li><a href="https://thecontributor.org/tag/hoboscopes/">Hoboscopes</a></li>
+        <li><a href="index.html" data-tag="" class="active">News</a></li>
+        <li><a href="index.html?tag=feature" data-tag="feature">Features</a></li>
+        <li><a href="index.html?tag=vendor-spotlight" data-tag="vendor-spotlight">Vendor Spotlight</a></li>
+        <li><a href="index.html?tag=vendor-writing" data-tag="vendor-writing">Vendor Writing</a></li>
+        <li><a href="index.html?tag=hoboscopes" data-tag="hoboscopes">Hoboscopes</a></li>
       </ul>
     </div>
   </div>
@@ -1099,7 +1099,7 @@
     <section class="yellow-cta">
       <h3>Looking for a Paper?</h3>
       <p>Our vendors are working their way into housing — find one near you.</p>
-      <a class="btn" href="https://thecontributor.org/our-vendors/find-a-vendor/">Find a Paper</a>
+      <a class="btn" href="page.html?slug=find-a-vendor">Find a Paper</a>
     </section>
 
     <section id="feature-slot"></section>
@@ -1108,7 +1108,7 @@
     <div id="grid-2" class="grid"></div>
 
     <div class="see-more-row">
-      <a class="see-more" href="https://thecontributor.org/our-paper/">See More</a>
+      <a class="see-more" href="index.html">See More</a>
     </div>
   </div>
 </main>
@@ -1162,10 +1162,48 @@
 (function() {
   'use strict';
 
-  const API_DIRECT = 'https://thecontributor.org/wp-json/wp/v2/posts';
+  const WP_BASE    = 'https://thecontributor.org';
+  const API_DIRECT = WP_BASE + '/wp-json/wp/v2/posts';
+  const TAGS_API   = WP_BASE + '/wp-json/wp/v2/tags';
+  const CATS_API   = WP_BASE + '/wp-json/wp/v2/categories';
   const QUERY      = '?_embed=true&per_page=14&_fields=id,date,slug,link,title,excerpt,_links,_embedded';
 
   const $ = id => document.getElementById(id);
+
+  /* ---------- map any thecontributor.org URL to a local route ---------- */
+  function localize(url) {
+    if (!url || typeof url !== 'string') return url || '#';
+    if (url.indexOf('thecontributor.org') === -1) return url;
+    let path;
+    try { path = new URL(url, WP_BASE).pathname; }
+    catch (e) { return url; }
+    path = path.replace(/^\/+|\/+$/g, '');
+    if (!path) return 'index.html';
+    const PAGES = {
+      'donate':'donate','pay':'pay',
+      'our-vendors/find-a-vendor':'find-a-vendor',
+      'our-vendors/become-a-vendor':'become-a-vendor',
+      'our-story/programs':'programs','our-story/how-it-works':'how-it-works',
+      'meet-us':'meet-us',
+      'get-involved/volunteer-with-us':'volunteer-with-us',
+      'get-involved/intern-with-us':'intern-with-us',
+      'get-involved/where-to-turn-in-nashville':'where-to-turn-in-nashville',
+      'where-to-turn-in-nashville':'where-to-turn-in-nashville',
+      'join-our-board':'join-our-board',
+      'unseen-nashville-tours':'unseen-nashville-tours',
+      'latestevents':'latestevents','advertise':'advertise',
+      'subscribe-today':'subscribe-today','contact-us':'contact-us'
+    };
+    if (PAGES[path]) return 'page.html?slug=' + PAGES[path];
+    let m;
+    if ((m = path.match(/^tag\/([^\/]+)/)))      return 'index.html?tag=' + encodeURIComponent(m[1]);
+    if ((m = path.match(/^category\/([^\/]+)/))) return 'index.html?category=' + encodeURIComponent(m[1]);
+    if ((m = path.match(/^author\/([^\/]+)/)))   return 'index.html?author=' + encodeURIComponent(m[1]);
+    if (path === 'our-paper') return 'index.html';
+    if (path.indexOf('/') === -1) return 'article.html?slug=' + encodeURIComponent(path);
+    const parts = path.split('/');
+    return 'article.html?slug=' + encodeURIComponent(parts[parts.length - 1]);
+  }
 
   function decode(html) {
     const t = document.createElement('textarea');
@@ -1225,7 +1263,7 @@
   }
   function getAuthorLink(post) {
     const a = post._embedded && post._embedded.author;
-    return (a && a[0] && a[0].link) || '#';
+    return localize((a && a[0] && a[0].link) || '#');
   }
   function getCategory(post) {
     const terms = (post._embedded && post._embedded['wp:term']) || [];
@@ -1239,9 +1277,9 @@
     const terms = (post._embedded && post._embedded['wp:term']) || [];
     const flat = [].concat(...terms);
     const cat = flat.find(t => t && t.taxonomy === 'category' && t.slug && t.slug !== 'uncategorized');
-    if (cat) return cat.link;
+    if (cat) return localize(cat.link);
     const tag = flat.find(t => t && t.taxonomy === 'post_tag');
-    return (tag && tag.link) || '#';
+    return localize((tag && tag.link) || '#');
   }
 
   /* ---------- placeholder (matches Figma) ---------- */
@@ -1397,20 +1435,44 @@
   }
 
   /* ---------- fetch ---------- */
+  function withProxy(url, useProxy) {
+    return useProxy ? 'https://corsproxy.io/?' + encodeURIComponent(url) : url;
+  }
+  async function fetchJson(url, useProxy) {
+    const res = await fetch(withProxy(url, useProxy), { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+    return res.json();
+  }
+  async function lookupTermId(api, slug, useProxy) {
+    const arr = await fetchJson(api + '?slug=' + encodeURIComponent(slug) + '&_fields=id,slug,name', useProxy);
+    return Array.isArray(arr) && arr[0] && arr[0].id ? arr[0].id : null;
+  }
   async function load(useProxy) {
     $('loading').hidden = false;
     $('error').hidden = true;
     $('content').hidden = true;
 
-    const finalUrl = useProxy
-      ? 'https://corsproxy.io/?' + encodeURIComponent(API_DIRECT + QUERY)
-      : API_DIRECT + QUERY;
+    const params = new URLSearchParams(location.search);
+    const tagSlug = params.get('tag');
+    const catSlug = params.get('category');
+
+    let url = API_DIRECT + QUERY;
 
     try {
-      const res = await fetch(finalUrl, { headers: { 'Accept': 'application/json' } });
-      if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
-      const posts = await res.json();
+      if (tagSlug) {
+        const id = await lookupTermId(TAGS_API, tagSlug, useProxy);
+        if (id) url += '&tags=' + id;
+      } else if (catSlug) {
+        const id = await lookupTermId(CATS_API, catSlug, useProxy);
+        if (id) url += '&categories=' + id;
+      }
+      const posts = await fetchJson(url, useProxy);
       render(posts);
+      // Highlight active filter pill
+      const activeSlug = tagSlug || '';
+      document.querySelectorAll('.filters-popover a').forEach(a => {
+        a.classList.toggle('active', (a.getAttribute('data-tag') || '') === activeSlug);
+      });
     } catch (err) {
       console.error('[Contributor reskin]', err);
       showError(err, useProxy === true);
