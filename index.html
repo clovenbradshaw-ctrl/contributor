@@ -1241,7 +1241,7 @@
     return el('article', { class: 'card feature' },
       el('div', { class: 'body' },
         labelEl,
-        el('h2', null, el('a', { href: post.link }, title)),
+        el('h2', null, el('a', { href: 'article.html?slug=' + encodeURIComponent(post.slug) }, title)),
         byline(post),
         el('p', { class: 'excerpt' }, excerpt)
       ),
@@ -1260,7 +1260,7 @@
         el('div', { class: 'section-label blue' },
           el('a', { href: getCategoryLink(post) }, getCategory(post).toUpperCase())
         ),
-        el('h3', null, el('a', { href: post.link }, title)),
+        el('h3', null, el('a', { href: 'article.html?slug=' + encodeURIComponent(post.slug) }, title)),
         byline(post),
         truncated ? el('p', { class: 'excerpt' }, truncated) : null
       )
