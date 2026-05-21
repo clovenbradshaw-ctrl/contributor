@@ -6,7 +6,7 @@
 <title>The Contributor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   /* =========================================================================
      THE CONTRIBUTOR — STATIC PAGE TEMPLATE
@@ -16,20 +16,75 @@
      ========================================================================= */
 
   :root {
-    --bg:           #F5F5F5;
-    --white:        #FFFFFF;
-    --ink:          #222222;
-    --yellow:       #FFC525;
-    --yellow-soft:  #FFDD72;
-    --blue:         #2275BB;
-    --text-body:    #484848;
-    --text-muted:   #808080;
-    --border:       #BEBEBE;
+    /* Brand palette (Charcoal / Sunflower / White / Brick / Blue) */
+    --charcoal-700: #222222;
+    --charcoal-600: #484848;
+    --charcoal-400: #808080;
+    --charcoal-200: #BEBEBE;
+    --charcoal-50:  #F5F5F5;
+
+    --sunflower-700: #FFC525;
+    --sunflower-650: #FFD34F;
+    --sunflower-600: #FFDD72;
+    --sunflower-500: #FFDD72;
+    --sunflower-400: #FCEDC1;
+
+    --white-700:    #FFFFFF;
+
+    --brick-700:    #BD261D;
+    --brick-400:    #E68386;
+
+    --blue-700:     #2275BB;
+    --blue-650:     #3E91D8;
+
+    /* Aliases used by older selectors */
+    --bg:           var(--charcoal-50);
+    --white:        var(--white-700);
+    --ink:          var(--charcoal-700);
+    --yellow:       var(--sunflower-700);
+    --yellow-soft:  var(--sunflower-600);
+    --blue:         var(--blue-700);
+    --blue-light:   var(--blue-650);
+    --text-body:    var(--charcoal-600);
+    --text-muted:   var(--charcoal-400);
+    --border:       var(--charcoal-200);
 
     --container:    1282px;
     --hero-col:     820px;
-    --body-col:     820px;
+    --body-col:     820px;}
+
+  /* =========================================================================
+     TYPE SYSTEM v1
+     Aligns with The Contributor brand spec:
+     Display / H1–H4 : DM Sans Bold
+     Eyebrow         : DM Sans Italic, uppercase, tracked
+     Body            : Source Serif 4
+     Attribution     : DM Sans 400/500
+     Links (in body) : Source Serif 4 Italic, blue, underlined
+     Caption         : Source Serif 4 Italic small
+     Quote 1 / 2     : Fraunces Italic display
+     ========================================================================= */
+  :root {
+    --font-sans:    "Figtree", system-ui, -apple-system, sans-serif;
+    --font-serif:   "Libre Baskerville", Georgia, serif;
+    --font-display: "Libre Baskerville", Georgia, serif;
   }
+  /* Brand type scale — Figtree (sans) + Libre Baskerville (serif) */
+  .type-display    { font-family: var(--font-sans); font-weight: 700; font-size: 65px; line-height: 1.3; letter-spacing: 0; }
+  .type-h1         { font-family: var(--font-sans); font-weight: 700; font-size: 40px; line-height: 1.3; letter-spacing: 0; }
+  .type-h2         { font-family: var(--font-sans); font-weight: 700; font-size: 32px; line-height: 1.3; letter-spacing: 0; }
+  .type-h3         { font-family: var(--font-sans); font-weight: 700; font-size: 26px; line-height: 1.3; letter-spacing: 0; }
+  .type-h4         { font-family: var(--font-sans); font-weight: 700; font-size: 20px; line-height: 1.3; letter-spacing: 0; }
+  .type-eyebrow    { font-family: var(--font-sans); font-style: italic; font-weight: 500; font-size: 18px; line-height: 1.5; letter-spacing: .05em; text-transform: uppercase; }
+  .type-eyebrow-sm { font-family: var(--font-sans); font-style: italic; font-weight: 500; font-size: 15px; line-height: 1.5; letter-spacing: 0; text-transform: uppercase; }
+  .type-body       { font-family: var(--font-serif); font-weight: 400; font-size: 20px; line-height: 1.6; letter-spacing: 0; }
+  .type-body-sm    { font-family: var(--font-serif); font-weight: 400; font-size: 18px; line-height: 1.6; letter-spacing: 0; }
+  .type-attr       { font-family: var(--font-sans); font-weight: 400; font-size: 18px; line-height: 1.5; letter-spacing: .01em; }
+  .type-attr-sm    { font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 1.5; letter-spacing: .01em; }
+  .type-link       { font-family: var(--font-serif); font-weight: 700; font-size: 20px; line-height: 1.6; color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+  .type-caption    { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+  .type-quote      { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 32px; line-height: 1.4; }
+  .type-quote-sm   { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 24px; line-height: 1.4; }
 
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -37,7 +92,7 @@
   body {
     background: var(--white);
     color: var(--ink);
-    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -53,13 +108,22 @@
   header.top { background: var(--bg); height: 100px; display: flex; align-items: center; }
   header.top .wrap { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 32px; }
   .wordmark {
-    font-family: "UnifrakturCook", "Old English Text MT", serif;
-    font-weight: 700; font-size: 44px; line-height: 1; color: var(--ink); white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+    color: var(--ink);
+  }
+  .wordmark img {
+    display: block;
+    height: 56px;
+    width: auto;
+    max-width: 280px;
+    object-fit: contain;
   }
   nav.top-nav { display: flex; align-items: center; gap: 4px; }
   nav.top-nav .item { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; font-size: 16px; font-weight: 500; color: var(--ink); cursor: pointer; }
   nav.top-nav .caret { width: 10px; height: 10px; }
-  nav.top-nav .btn { padding: 12px 22px; font-family: "DM Sans", sans-serif; font-size: 15px; font-weight: 500; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; margin-left: 8px; }
+  nav.top-nav .btn { padding: 8px 22px; font-family: var(--font-sans); font-size: 16px; font-weight: 700; line-height: 1.5; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; margin-left: 8px; white-space: nowrap; }
   nav.top-nav .btn:hover { background: var(--ink); color: var(--white); }
   nav.top-nav .btn.primary { background: var(--yellow); border-color: var(--yellow); }
   nav.top-nav .btn.primary:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
@@ -67,7 +131,7 @@
 
   .subnav { background: var(--ink); height: 50px; display: flex; align-items: center; }
   .subnav .wrap { width: 100%; display: flex; align-items: center; gap: 36px; }
-  .subnav a { display: inline-flex; align-items: center; gap: 10px; color: var(--yellow); font-size: 14px; font-weight: 500; }
+  .subnav a { display: inline-flex; align-items: center; gap: 10px; color: var(--yellow-soft); font-size: 16px; font-weight: 700; white-space: nowrap; }
   .subnav a:hover { color: var(--yellow-soft); }
   .subnav svg { width: 18px; height: 18px; }
 
@@ -79,14 +143,15 @@
   .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); z-index: 99; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
   .drawer-overlay[data-open="true"] { opacity: 1; pointer-events: auto; }
   .drawer-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; flex: 0 0 auto; gap: 12px; }
-  .drawer-title { display: inline-flex; align-items: center; gap: 14px; font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 22px; color: var(--ink); }
+  .drawer-title { display: inline-flex; align-items: center; gap: 14px; font-family: var(--font-sans); font-weight: 700; font-size: 22px; color: var(--ink); }
   .drawer-title .bullet { width: 22px; height: 22px; border-radius: 50%; background: var(--ink); flex: 0 0 22px; }
-  .drawer-logo-slot { display: inline-flex; align-items: center; justify-content: center; background: #D9D9D9; color: var(--ink); font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 16px; padding: 12px 32px; min-width: 130px; min-height: 44px; }
+  .drawer-logo-slot { display: inline-flex; align-items: center; line-height: 0; }
+  .drawer-logo-slot img { display: block; height: 42px; width: auto; max-width: 220px; object-fit: contain; }
   .drawer-back, .drawer-close { background: none; border: 0; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; color: var(--ink); flex: 0 0 auto; }
   .drawer-back svg, .drawer-close svg { width: 22px; height: 22px; }
   .drawer-body { flex: 1; overflow-y: auto; padding: 14px 20px 20px; }
   .drawer-body ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
-  .drawer-item { display: flex; align-items: center; gap: 18px; padding: 18px 0; font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 22px; color: var(--ink); cursor: pointer; width: 100%; border: 0; background: none; text-align: left; }
+  .drawer-item { display: flex; align-items: center; gap: 18px; padding: 18px 0; font-family: var(--font-sans); font-weight: 700; font-size: 22px; color: var(--ink); cursor: pointer; width: 100%; border: 0; background: none; text-align: left; }
   .drawer-item .bullet { width: 18px; height: 18px; border-radius: 50%; background: var(--ink); flex: 0 0 18px; }
   .drawer-item .grow { flex: 1; }
   .drawer-item .caret { color: var(--ink); width: 16px; height: 16px; flex: 0 0 16px; }
@@ -95,7 +160,7 @@
   .drawer-item.sub { font-size: 22px; font-weight: 700; padding: 18px 0; line-height: 1.25; }
   .drawer-item.sub .bullet { display: none; }
   .drawer-footer { flex: 0 0 auto; padding: 18px 20px 28px; }
-  .drawer-donate { display: block; width: 100%; background: var(--ink); color: var(--white); text-align: center; padding: 16px 24px; font-family: "DM Sans", sans-serif; font-weight: 500; font-size: 16px; border: 0; }
+  .drawer-donate { display: block; width: 100%; background: var(--ink); color: var(--white); text-align: center; padding: 16px 24px; font-family: var(--font-sans); font-weight: 500; font-size: 16px; border: 0; }
   .drawer-donate:hover { background: var(--blue); }
   .drawer-pane { display: none; flex-direction: column; height: 100%; }
   .drawer-pane[data-active="true"] { display: flex; }
@@ -106,11 +171,11 @@
   .page-shell { padding: 64px 0 80px; background: var(--white); }
 
   .page-title {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
-    font-size: clamp(48px, 6vw, 80px);
-    line-height: 1;
-    letter-spacing: -.02em;
+    font-size: 65px;
+    line-height: 1.3;
+    letter-spacing: 0;
     text-align: center;
     margin: 0 0 48px;
     color: var(--ink);
@@ -120,7 +185,7 @@
     max-width: var(--body-col);
     margin: 0 auto;
     padding: 0 24px;
-    font-family: "Source Serif 4", Georgia, serif;
+    font-family: var(--font-serif);
     font-size: 17px;
     line-height: 1.65;
     color: var(--ink);
@@ -133,19 +198,26 @@
      ========================================================================= */
   .page-body p { margin: 0 0 22px; }
   .page-body p:last-child { margin-bottom: 0; }
-  .page-body a { color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+  .page-body a {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 
   .page-body h2, .page-body h3, .page-body h4 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: 0;
     color: var(--ink);
     margin: 48px 0 18px;
-    line-height: 1.2;
     clear: both;
   }
-  .page-body h2 { font-size: 32px; letter-spacing: -.01em; }
-  .page-body h3 { font-size: 24px; }
-  .page-body h4 { font-size: 19px; }
+  .page-body h2 { font-size: 32px; }
+  .page-body h3 { font-size: 26px; }
+  .page-body h4 { font-size: 20px; }
 
   .page-body ul, .page-body ol { margin: 0 0 22px; padding-left: 24px; }
   .page-body li { margin-bottom: 8px; }
@@ -153,19 +225,40 @@
   /* WP image alignment — two-column layouts */
   .page-body img,
   .page-body figure {
-    max-width: 100%; height: auto; display: block;
+    max-width: 100% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    display: block;
+  }
+  /* Default standalone images (no align class) — fill the column */
+  .page-body > p > img,
+  .page-body > img,
+  .page-body > figure:not(.alignleft):not(.alignright),
+  .page-body > .wp-block-image:not(.alignleft):not(.alignright) img {
+    width: 100%;
+    margin: 36px auto;
   }
   .page-body img.aligncenter,
   .page-body figure.aligncenter,
   .page-body .wp-block-image.aligncenter,
-  .page-body .wp-caption.aligncenter { margin: 32px auto; text-align: center; }
+  .page-body .wp-caption.aligncenter {
+    margin: 36px auto;
+    text-align: center;
+  }
+  .page-body .wp-block-image.aligncenter img,
+  .page-body figure.aligncenter img {
+    width: 100%;
+    margin: 0 auto;
+  }
+  /* Floated alignleft/alignright — uniform 45% so consecutive images line up */
   .page-body img.alignleft,
   .page-body figure.alignleft,
   .page-body .wp-block-image.alignleft,
   .page-body .wp-caption.alignleft {
     float: left;
     margin: 8px 32px 24px 0;
-    max-width: 400px;
+    width: 45%;
+    max-width: 45%;
   }
   .page-body img.alignright,
   .page-body figure.alignright,
@@ -173,12 +266,21 @@
   .page-body .wp-caption.alignright {
     float: right;
     margin: 8px 0 24px 32px;
-    max-width: 400px;
+    width: 45%;
+    max-width: 45%;
   }
-  .page-body figure { margin: 32px 0; }
+  .page-body .alignleft img,
+  .page-body .alignright img {
+    width: 100%;
+    height: auto;
+  }
+  .page-body figure { margin: 36px 0; }
   .page-body figcaption {
-    font-style: italic; font-size: 14px; color: var(--text-body);
-    margin-top: 8px; text-align: right;
+    font-family: var(--font-serif);
+    font-style: italic; font-size: 14px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-align: right;
   }
 
   /* WP video / iframe embeds */
@@ -199,36 +301,88 @@
     margin: 32px auto;
   }
 
-  /* WP block quotes / pull quotes */
+  /* Regular blockquotes — restrained, used for indented quotes / bios.
+     The dramatic Quote 1 treatment is reserved for .wp-block-pullquote below. */
   .page-body blockquote,
   .page-body .wp-block-quote {
-    margin: 32px 0;
-    padding-left: 24px;
+    margin: 28px 0;
+    padding: 4px 0 4px 24px;
     border-left: 3px solid var(--yellow);
+    font-family: var(--font-serif);
+    font-weight: 400;
     font-style: italic;
-    font-size: 19px;
+    font-size: 18px;
+    line-height: 1.6;
     color: var(--ink);
   }
+  .page-body blockquote p,
+  .page-body .wp-block-quote p { margin: 0 0 12px; }
+  .page-body blockquote p:last-child,
+  .page-body .wp-block-quote p:last-child { margin-bottom: 0; }
   .page-body .wp-block-pullquote {
     text-align: center;
-    margin: 48px auto;
-    padding: 32px 24px;
+    margin: 56px auto;
+    padding: 40px 24px;
     border-top: 1px solid var(--border);
     border-bottom: 1px solid var(--border);
     border-left: 0; border-right: 0;
-    font-family: "Source Serif 4", Georgia, serif;
+    font-family: var(--font-serif);
     font-style: italic;
-    font-size: clamp(22px, 2.6vw, 32px);
-    line-height: 1.3;
+    font-weight: 400;
+    font-size: clamp(24px, 2.8vw, 32px);
+    line-height: 1.4;
     color: var(--ink);
   }
-  .page-body .wp-block-pullquote cite {
+  .page-body .wp-block-pullquote cite,
+  .page-body blockquote cite,
+  .page-body .wp-block-quote cite {
     display: block;
+    font-family: var(--font-sans);
     font-style: normal;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 500;
     color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .12em;
     margin-top: 14px;
-    font-family: "DM Sans", sans-serif;
+  }
+
+  /* Team bios — image + blockquote paired into a 2-column grid by JS */
+  .page-body .bio-pair {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 32px;
+    margin: 48px 0;
+    align-items: start;
+  }
+  .page-body .bio-pair > *:first-child {
+    margin: 0;
+    width: 240px;
+    float: none;
+  }
+  .page-body .bio-pair > *:first-child img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .page-body .bio-pair > blockquote,
+  .page-body .bio-pair > .wp-block-quote {
+    margin: 0;
+    padding: 0 0 0 24px;
+    border-left: 3px solid var(--yellow);
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  @media (max-width: 640px) {
+    .page-body .bio-pair {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    .page-body .bio-pair > *:first-child { width: 200px; }
   }
 
   /* Horizontal rules */
@@ -255,16 +409,17 @@
   footer.site { background: var(--ink); color: var(--white); padding: 64px 0 28px; margin-top: 48px; }
   footer.site .cols { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 56px; margin-bottom: 48px; }
   footer.site .wordmark { color: var(--white); margin-bottom: 28px; display: inline-block; }
-  footer.site h5 { font-family: "DM Sans", sans-serif; font-style: italic; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--yellow-soft); margin: 0 0 12px; }
-  footer.site .mission { font-family: "Source Serif 4", Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.4; margin: 0 0 28px; color: var(--white); max-width: 460px; }
-  footer.site address { font-family: "DM Sans", sans-serif; font-style: normal; font-size: 14px; line-height: 1.6; color: var(--white); }
+  footer.site .wordmark img { filter: invert(1) brightness(2); height: 60px; }
+  footer.site h5 { font-family: var(--font-sans); font-style: italic; font-weight: 700; font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--yellow-soft); margin: 0 0 12px; }
+  footer.site .mission { font-family: var(--font-serif); font-style: italic; font-size: 19px; line-height: 1.4; margin: 0 0 28px; color: var(--white); max-width: 460px; }
+  footer.site address { font-family: var(--font-sans); font-style: normal; font-size: 14px; line-height: 1.6; color: var(--white); }
   footer.site address a { color: var(--white); }
   footer.site address a:hover { color: var(--yellow-soft); }
   footer.site .socials { display: flex; gap: 12px; margin-top: 16px; }
   footer.site .socials a { width: 32px; height: 32px; background: var(--yellow-soft); color: var(--ink); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; }
   footer.site .socials a:hover { background: var(--yellow); }
   footer.site .socials svg { width: 16px; height: 16px; }
-  footer.site .colophon { font-family: "DM Sans", sans-serif; font-size: 13px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,.12); padding-top: 24px; text-align: center; }
+  footer.site .colophon { font-family: var(--font-sans); font-size: 13px; color: var(--text-muted); border-top: 1px solid rgba(255,255,255,.12); padding-top: 24px; text-align: center; }
   @media (max-width: 880px) { footer.site .cols { grid-template-columns: 1fr; gap: 36px; } }
 
   /* =========================================================================
@@ -274,12 +429,12 @@
   @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
 
   .error-box { background: var(--white); border: 1px solid var(--ink); padding: 32px; max-width: var(--body-col); margin: 32px auto; }
-  .error-box .label { font-family: "DM Sans", sans-serif; font-style: italic; font-weight: 700; text-transform: uppercase; color: var(--blue); font-size: 13px; letter-spacing: .12em; margin-bottom: 12px; }
-  .error-box h3 { font-family: "DM Sans", sans-serif; font-weight: 700; font-size: 26px; margin: 0 0 14px; color: var(--ink); }
-  .error-box p { font-family: "Source Serif 4", serif; font-size: 16px; color: var(--text-body); margin: 0 0 12px; }
+  .error-box .label { font-family: var(--font-sans); font-style: italic; font-weight: 700; text-transform: uppercase; color: var(--blue); font-size: 13px; letter-spacing: .12em; margin-bottom: 12px; }
+  .error-box h3 { font-family: var(--font-sans); font-weight: 700; font-size: 26px; margin: 0 0 14px; color: var(--ink); }
+  .error-box p { font-family: var(--font-serif); font-size: 16px; color: var(--text-body); margin: 0 0 12px; }
   .error-box code { font-family: ui-monospace, monospace; font-size: 13px; background: var(--bg); padding: 2px 6px; border: 1px solid var(--border); }
   .error-box .actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
-  .error-box button { font-family: "DM Sans", sans-serif; font-size: 14px; font-weight: 500; padding: 10px 20px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; }
+  .error-box button { font-family: var(--font-sans); font-size: 14px; font-weight: 500; padding: 10px 20px; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; }
   .error-box button.primary { background: var(--yellow); }
   .error-box button:hover { background: var(--ink); color: var(--white); }
 
@@ -290,11 +445,11 @@
      ========================================================================= */
   @media (max-width: 980px) {
     nav.top-nav .item:not(.btn) { display: none; }
-    .wordmark { font-size: 36px; }
+    .wordmark img { height: 48px; }
   }
   @media (max-width: 720px) {
     header.top { height: 70px; }
-    .wordmark { font-size: 28px; }
+    .wordmark img { height: 36px; }
     nav.top-nav { display: none; }
     .hamburger { display: inline-flex; }
     .subnav { display: none; }
@@ -321,13 +476,15 @@
      ========================================================================= */
   .nav-group { position: relative; display: inline-block; }
   .nav-trigger {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 8px;
     padding: 10px 18px;
-    font-family: "DM Sans", sans-serif;
-    font-size: 16px; font-weight: 500;
+    font-family: var(--font-sans);
+    font-size: 18px; font-weight: 700;
+    line-height: 1.5;
     color: var(--ink);
     background: none; border: 0;
     cursor: pointer;
+    white-space: nowrap;
   }
   .nav-trigger .caret { transition: transform .2s; }
   .nav-trigger[aria-expanded="true"] .caret { transform: rotate(180deg); }
@@ -347,7 +504,7 @@
   .nav-dropdown a {
     display: block;
     padding: 10px 22px;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: 15px; font-weight: 500;
     color: var(--ink);
     white-space: nowrap;
@@ -366,7 +523,7 @@
      ============================================================ -->
 <header class="top">
   <div class="wrap">
-    <a href="index.html" class="wordmark">The Contributor</a>
+    <a href="index.html" class="wordmark" aria-label="The Contributor — Home"><img src="assets/logo-text.png" alt="The Contributor" /></a>
     <nav class="top-nav">
             <div class="nav-group" data-nav="about">
         <button class="nav-trigger" aria-expanded="false" aria-haspopup="true">About Us
@@ -395,9 +552,9 @@
           <a href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a>
         </div>
       </div>
-      <a href="page.html?slug=donate" class="btn">Donate</a>
-      <a href="page.html?slug=pay" class="btn primary">Buy a Paper</a>
-      <button class="search-btn" aria-label="Search">
+      <a href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener" class="btn">Donate</a>
+      <a href="https://thecontributor.org/pay/" target="_blank" rel="noopener" class="btn primary">Buy a Paper</a>
+      <button class="search-btn" aria-label="Search" onclick="(function(){var q=prompt('Search The Contributor:');if(q)window.open('https://www.google.com/search?q='+encodeURIComponent(q+' site:thecontributor.org'),'_blank');})()">
         <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/><line x1="13.5" y1="13.5" x2="17.5" y2="17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       </button>
     </nav>
@@ -411,7 +568,7 @@
 <aside class="drawer" id="drawer" aria-hidden="true">
   <div class="drawer-pane" data-active="true" data-pane="top">
     <div class="drawer-header">
-      <span class="drawer-logo-slot">Logo</span>
+      <span class="drawer-logo-slot"><img src="assets/logo-text.png" alt="The Contributor" /></span>
       <button class="drawer-close" aria-label="Close menu">
         <svg viewBox="0 0 24 24" fill="none"><line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
@@ -420,13 +577,13 @@
       <ul>
         <li><button class="drawer-item" data-go="about"><span class="bullet"></span><span class="grow">About Us</span><svg class="caret" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></li>
         <li><button class="drawer-item" data-go="involved"><span class="bullet"></span><span class="grow">Get Involved</span><svg class="caret" viewBox="0 0 14 14" fill="none"><path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button></li>
-        <li><a class="drawer-item" href="#"><span class="bullet"></span><span class="grow">Search</span></a></li>
+        <li><a class="drawer-item" href="#" onclick="event.preventDefault();var q=prompt('Search The Contributor:');if(q)window.open('https://www.google.com/search?q='+encodeURIComponent(q+' site:thecontributor.org'),'_blank');"><span class="bullet"></span><span class="grow">Search</span></a></li>
         <li><a class="drawer-item" href="page.html?slug=find-a-vendor"><span class="bullet"></span><span class="grow">Find a Paper</span></a></li>
         <li><a class="drawer-item" href="page.html?slug=become-a-vendor"><span class="bullet"></span><span class="grow">Become a Vendor</span></a></li>
         <li><a class="drawer-item" href="index.html?tag=vendor-spotlight"><span class="bullet"></span><span class="grow">Vendor Spotlight</span></a></li>
       </ul>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="about">
     <div class="drawer-header">
@@ -444,7 +601,7 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="involved">
     <div class="drawer-header">
@@ -463,7 +620,7 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
   </div>
 </aside>
 
@@ -505,7 +662,7 @@
   <div class="wrap">
     <div class="cols">
       <div>
-        <span class="wordmark">The Contributor</span>
+        <span class="wordmark"><img src="assets/logo-text.png" alt="The Contributor" /></span>
         <h5>Our Mission</h5>
         <p class="mission">Empowering our homeless neighbors to achieve income, dignity, housing and community.</p>
         <h5>Our Vision</h5>
@@ -520,10 +677,10 @@
         <address>154 Rep. John Lewis Way N.<br>Nashville, TN 37216<br><a href="mailto:info@thecontributor.org">info@thecontributor.org</a><br>(615) 829-6829</address>
         <h5 style="margin-top:24px">Follow Us</h5>
         <div class="socials">
-          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7c0-1 .5-2 2-2h2V1h-3c-3 0-5 2-5 5v4H6v4h3v8h4z"/></svg></a>
-          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6c-.5.7-1 1-1.5 1.5.5 7-5 12-12 12-2 0-4-.5-5.5-1.5 2 .5 5 0 6.5-1-2 0-3.5-1.5-4-3 .5 0 1 0 2-.5-2 0-4-2-4-4 1 .5 1 .5 2 .5C1 9 1 6 2 4c2 3 5.5 5 9 5-.5-3 2-5 4.5-5 1 0 2 .5 3 1 1-.5 2-.5 3-1-.5 1-1 2-2 2.5.5 0 1.5-.5 2-1z"/></svg></a>
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></a>
-          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 4c.5 2 2 3.5 4 4v3.5c-1.5 0-3-.5-4-1V16c0 3-2.5 5.5-5.5 5.5S5 19 5 16s2.5-5.5 5.5-5.5c.5 0 1 0 1.5.2V14c-.5-.2-1-.3-1.5-.3-1.3 0-2.4 1-2.4 2.3s1 2.3 2.4 2.3c1.3 0 2.4-1 2.4-2.3V4h3z"/></svg></a>
+          <a href="https://www.facebook.com/ContributorNashville/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7c0-1 .5-2 2-2h2V1h-3c-3 0-5 2-5 5v4H6v4h3v8h4z"/></svg></a>
+          <a href="https://x.com/TheContributor" target="_blank" rel="noopener" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6c-.5.7-1 1-1.5 1.5.5 7-5 12-12 12-2 0-4-.5-5.5-1.5 2 .5 5 0 6.5-1-2 0-3.5-1.5-4-3 .5 0 1 0 2-.5-2 0-4-2-4-4 1 .5 1 .5 2 .5C1 9 1 6 2 4c2 3 5.5 5 9 5-.5-3 2-5 4.5-5 1 0 2 .5 3 1 1-.5 2-.5 3-1-.5 1-1 2-2 2.5.5 0 1.5-.5 2-1z"/></svg></a>
+          <a href="https://www.instagram.com/thecontributor/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></a>
+          <a href="https://www.tiktok.com/@contributorstreetpaper" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 4c.5 2 2 3.5 4 4v3.5c-1.5 0-3-.5-4-1V16c0 3-2.5 5.5-5.5 5.5S5 19 5 16s2.5-5.5 5.5-5.5c.5 0 1 0 1.5.2V14c-.5-.2-1-.3-1.5-.3-1.3 0-2.4 1-2.4 2.3s1 2.3 2.4 2.3c1.3 0 2.4-1 2.4-2.3V4h3z"/></svg></a>
         </div>
       </div>
     </div>
@@ -612,6 +769,38 @@
     }
   }
 
+  /* ---------- pair image + blockquote into a 2-col bio card ---------- */
+  function pairBiosWithPhotos(root) {
+    if (!root) return;
+    // Walk direct children. Look for image-bearing block followed by blockquote.
+    const children = [...root.children];
+    for (let i = 0; i < children.length - 1; i++) {
+      const a = children[i], b = children[i + 1];
+      if (!a || !b) continue;
+      const isImageBlock = (el) => {
+        if (!el) return false;
+        if (el.tagName === 'FIGURE' && el.querySelector('img')) return true;
+        if (el.classList && el.classList.contains('wp-block-image')) return true;
+        // <p> containing only an image (WP classic editor pattern)
+        if (el.tagName === 'P') {
+          const onlyImg = el.querySelector('img');
+          if (onlyImg && (el.textContent || '').trim() === '') return true;
+        }
+        return false;
+      };
+      const isQuote = (el) => el && (el.tagName === 'BLOCKQUOTE' || (el.classList && el.classList.contains('wp-block-quote')));
+      if (isImageBlock(a) && isQuote(b)) {
+        const wrap = document.createElement('div');
+        wrap.className = 'bio-pair';
+        a.before(wrap);
+        wrap.appendChild(a);
+        wrap.appendChild(b);
+        // Adjust loop index — we consumed 2 children but replaced with 1
+        i++;
+      }
+    }
+  }
+
   /* ---------- render ---------- */
   function renderPage(page) {
     const titleText = decode(page.title.rendered);
@@ -628,7 +817,22 @@
       im.removeAttribute('height');
       im.style.removeProperty('width');
       im.style.removeProperty('height');
+      im.style.removeProperty('aspect-ratio');
+      const src = im.src;
+      im.crossOrigin = 'anonymous';
+      if (src) { im.src = ''; im.src = src; }
     });
+    $('body').querySelectorAll('figure, .wp-block-image').forEach(fig => {
+      fig.style.removeProperty('width');
+      fig.style.removeProperty('height');
+      fig.style.removeProperty('aspect-ratio');
+      fig.classList.remove('is-resized');
+    });
+
+    // Pair team-bio patterns: an image immediately followed by a blockquote becomes
+    // a 2-column grid (photo on left, bio on right) so the page doesn't stack
+    // tall photo → big empty whitespace → big italic bio block.
+    pairBiosWithPhotos($('body'));
 
     // Make iframes (YouTube embeds etc.) scale fluidly
     $('body').querySelectorAll('iframe').forEach(f => {
@@ -749,5 +953,8 @@
 })();
 </script>
 
+<script src="search.js"></script>
+<script src="assets/pico.js"></script>
+<script src="smart-crop.js"></script>
 </body>
 </html>

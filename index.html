@@ -6,7 +6,7 @@
 <title>The Contributor — Nashville's Street Paper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..900;1,9..40,400..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,400..700;1,8..60,400..700&family=UnifrakturCook:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
   /* =========================================================================
      THE CONTRIBUTOR — RESKIN (Figma-matched)
@@ -15,19 +15,73 @@
      ========================================================================= */
 
   :root {
-    --bg:           #F5F5F5;
-    --white:        #FFFFFF;
-    --ink:          #222222;
-    --yellow:       #FFC525;
-    --yellow-soft:  #FFDD72;
-    --blue:         #2275BB;
-    --blue-light:   #3E91D8;
-    --text-body:    #484848;
-    --text-muted:   #808080;
-    --border:       #BEBEBE;
-    --container:    1282px;
-    --gutter:       79px;
+    /* Brand palette (Charcoal / Sunflower / White / Brick / Blue) */
+    --charcoal-700: #222222;
+    --charcoal-600: #484848;
+    --charcoal-400: #808080;
+    --charcoal-200: #BEBEBE;
+    --charcoal-50:  #F5F5F5;
+
+    --sunflower-700: #FFC525;
+    --sunflower-650: #FFD34F;
+    --sunflower-600: #FFDD72;
+    --sunflower-500: #FFDD72;
+    --sunflower-400: #FCEDC1;
+
+    --white-700:    #FFFFFF;
+
+    --brick-700:    #BD261D;
+    --brick-400:    #E68386;
+
+    --blue-700:     #2275BB;
+    --blue-650:     #3E91D8;
+
+    /* Aliases used by older selectors */
+    --bg:           var(--charcoal-50);
+    --white:        var(--white-700);
+    --ink:          var(--charcoal-700);
+    --yellow:       var(--sunflower-700);
+    --yellow-soft:  var(--sunflower-600);
+    --blue:         var(--blue-700);
+    --blue-light:   var(--blue-650);
+    --text-body:    var(--charcoal-600);
+    --text-muted:   var(--charcoal-400);
+    --border:       var(--charcoal-200);
+    --container: 1282px;
+    --gutter: 80px;}
+
+  /* =========================================================================
+     TYPE SYSTEM v1
+     Aligns with The Contributor brand spec:
+     Display / H1–H4 : DM Sans Bold
+     Eyebrow         : DM Sans Italic, uppercase, tracked
+     Body            : Source Serif 4
+     Attribution     : DM Sans 400/500
+     Links (in body) : Source Serif 4 Italic, blue, underlined
+     Caption         : Source Serif 4 Italic small
+     Quote 1 / 2     : Fraunces Italic display
+     ========================================================================= */
+  :root {
+    --font-sans:    "Figtree", system-ui, -apple-system, sans-serif;
+    --font-serif:   "Libre Baskerville", Georgia, serif;
+    --font-display: "Libre Baskerville", Georgia, serif;
   }
+  /* Brand type scale — Figtree (sans) + Libre Baskerville (serif) */
+  .type-display    { font-family: var(--font-sans); font-weight: 700; font-size: 65px; line-height: 1.3; letter-spacing: 0; }
+  .type-h1         { font-family: var(--font-sans); font-weight: 700; font-size: 40px; line-height: 1.3; letter-spacing: 0; }
+  .type-h2         { font-family: var(--font-sans); font-weight: 700; font-size: 32px; line-height: 1.3; letter-spacing: 0; }
+  .type-h3         { font-family: var(--font-sans); font-weight: 700; font-size: 26px; line-height: 1.3; letter-spacing: 0; }
+  .type-h4         { font-family: var(--font-sans); font-weight: 700; font-size: 20px; line-height: 1.3; letter-spacing: 0; }
+  .type-eyebrow    { font-family: var(--font-sans); font-style: italic; font-weight: 500; font-size: 18px; line-height: 1.5; letter-spacing: .05em; text-transform: uppercase; }
+  .type-eyebrow-sm { font-family: var(--font-sans); font-style: italic; font-weight: 500; font-size: 15px; line-height: 1.5; letter-spacing: 0; text-transform: uppercase; }
+  .type-body       { font-family: var(--font-serif); font-weight: 400; font-size: 20px; line-height: 1.6; letter-spacing: 0; }
+  .type-body-sm    { font-family: var(--font-serif); font-weight: 400; font-size: 18px; line-height: 1.6; letter-spacing: 0; }
+  .type-attr       { font-family: var(--font-sans); font-weight: 400; font-size: 18px; line-height: 1.5; letter-spacing: .01em; }
+  .type-attr-sm    { font-family: var(--font-sans); font-weight: 400; font-size: 16px; line-height: 1.5; letter-spacing: .01em; }
+  .type-link       { font-family: var(--font-serif); font-weight: 700; font-size: 20px; line-height: 1.6; color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
+  .type-caption    { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 14px; line-height: 1.5; color: var(--text-muted); }
+  .type-quote      { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 32px; line-height: 1.4; }
+  .type-quote-sm   { font-family: var(--font-serif); font-style: italic; font-weight: 400; font-size: 24px; line-height: 1.4; }
 
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
@@ -35,7 +89,7 @@
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: "DM Sans", system-ui, -apple-system, sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -47,6 +101,10 @@
     max-width: var(--container);
     margin: 0 auto;
     padding: 0 24px;
+    width: 100%;
+  }
+  @media (min-width: 1100px) {
+    .wrap { padding: 0 0; }
   }
 
   /* =========================================================================
@@ -63,33 +121,40 @@
     gap: 32px;
   }
   .wordmark {
-    font-family: "UnifrakturCook", "Old English Text MT", serif;
-    font-weight: 700;
-    font-size: 44px;
-    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
     color: var(--ink);
-    white-space: nowrap;
+  }
+  .wordmark img {
+    display: block;
+    height: 56px;
+    width: auto;
+    max-width: 280px;
+    object-fit: contain;
   }
   nav.top-nav { display: flex; align-items: center; gap: 4px; }
   nav.top-nav .item {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 18px;
-    font-size: 16px;
-    font-weight: 500;
+    font-size: 18px;
+    font-weight: 700;
     color: var(--ink);
     cursor: pointer;
   }
   nav.top-nav .caret { width: 10px; height: 10px; opacity: .9; }
   nav.top-nav .btn {
-    padding: 12px 22px;
-    font-family: "DM Sans", sans-serif;
-    font-size: 15px;
-    font-weight: 500;
+    padding: 8px 22px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
     border: 1px solid var(--ink);
     background: var(--white);
     color: var(--ink);
     cursor: pointer;
     margin-left: 8px;
+    white-space: nowrap;
+    line-height: 1.5;
   }
   nav.top-nav .btn:hover { background: var(--ink); color: var(--white); }
   nav.top-nav .btn.primary {
@@ -103,7 +168,7 @@
   }
   @media (max-width: 980px) {
     nav.top-nav .item:not(.btn) { display: none; }
-    .wordmark { font-size: 36px; }
+    .wordmark img { height: 48px; }
   }
 
   /* =========================================================================
@@ -117,16 +182,19 @@
   .subnav .wrap {
     width: 100%;
     display: flex; align-items: center;
-    gap: 36px;
+    gap: 34px;
   }
   .subnav a {
     display: inline-flex; align-items: center; gap: 10px;
-    color: var(--yellow);
-    font-size: 14px;
-    font-weight: 500;
+    color: var(--yellow-soft);
+    font-size: 16px;
+    font-weight: 700;
+    white-space: nowrap;
   }
   .subnav a:hover { color: var(--yellow-soft); }
-  .subnav svg { width: 18px; height: 18px; }
+  .subnav svg { width: 22px; height: 22px; stroke: var(--yellow-soft); }
+  .subnav svg path { stroke: var(--yellow-soft); }
+  .subnav svg circle { stroke: var(--yellow-soft); }
   @media (max-width: 720px) {
     .subnav .wrap { gap: 18px; overflow-x: auto; }
     .subnav a { white-space: nowrap; font-size: 13px; }
@@ -143,7 +211,7 @@
   .filters-trigger {
     background: none; border: 0;
     display: inline-flex; align-items: center; gap: 8px;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: 16px; font-weight: 500;
     color: var(--ink);
     cursor: pointer;
@@ -167,7 +235,7 @@
   .filters-popover[data-open="true"] { display: block; }
   .filters-popover ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 18px; }
   .filters-popover a {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-style: italic;
     font-size: 15px;
     font-weight: 700;
@@ -185,6 +253,32 @@
     background: var(--white);
     border: 1px solid var(--ink);
     margin-bottom: 24px;
+    position: relative;
+    box-shadow: 6px 6px 6px 0px rgba(0,0,0,0.15);
+    transition: transform .18s ease, box-shadow .18s ease;
+  }
+
+  /* Stretched-link pattern — make whole card clickable via the title's anchor.
+     Inner anchors (byline, category) keep their own click areas via z-index. */
+  .card.feature .body h2 a::after,
+  article.story .body h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+  .card.feature .byline a,
+  .card.feature .section-label a,
+  article.story .byline a,
+  article.story .section-label a {
+    position: relative;
+    z-index: 2;
+  }
+  .card.feature:hover,
+  article.story:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 0 var(--ink);
+    cursor: pointer;
   }
 
   .feature {
@@ -194,11 +288,11 @@
     min-height: 434px;
   }
   .feature .body {
-    padding: 56px 60px 40px;
-    display: flex; flex-direction: column; justify-content: flex-start;
+    padding: 32px 36px 32px 30px;
+    display: flex; flex-direction: column; justify-content: center;
   }
   .feature .img-frame {
-    border-left: 1px solid var(--ink);
+    /* no inner border per Figma */
     background: var(--yellow-soft);
     overflow: hidden;
     position: relative;
@@ -209,14 +303,17 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: 50% 50%; /* center default; smart-crop refines via JS */
     display: block;
+    transition: object-position .3s ease;
   }
   .feature .img-frame figcaption {
-    font-family: "Source Serif 4", Georgia, serif;
+    font-family: var(--font-serif);
     font-style: italic;
-    font-size: 13px;
-    color: var(--text-body);
-    padding: 8px 16px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    padding: 8px 0 0;
     text-align: right;
   }
   @media (max-width: 880px) {
@@ -226,40 +323,41 @@
   }
 
   .section-label {
-    font-family: "DM Sans", sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: .12em;
-    color: var(--text-muted);
-    margin-bottom: 16px;
-  }
-  .section-label.blue {
-    color: var(--blue);
+    font-family: var(--font-sans);
     font-style: italic;
-    font-weight: 700;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--text-body);
+    margin-bottom: 14px;
   }
+  .section-label.blue { color: var(--blue-light); }
   .section-label.blue a {
     text-decoration: underline;
     text-underline-offset: 4px;
   }
 
   .feature h2 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
-    font-size: clamp(28px, 3.2vw, 40px);
-    line-height: 1.15;
-    letter-spacing: -.01em;
-    margin: 0 0 20px;
+    font-size: 40px;
+    line-height: 1.3;
+    letter-spacing: 0;
+    margin: 0 0 18px;
     color: var(--ink);
   }
-  .feature h2 a:hover { color: var(--blue); }
+  .feature h2 a { color: inherit; }
 
   .byline {
-    font-family: "DM Sans", sans-serif;
-    font-size: 14px;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.5;
+    letter-spacing: .01em;
     color: var(--text-body);
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
   .byline a {
     color: var(--blue);
@@ -270,12 +368,12 @@
   .byline .sep { color: var(--text-muted); margin: 0 6px; }
 
   .feature .excerpt {
-    font-family: "Source Serif 4", Georgia, serif;
-    font-size: 17px;
-    line-height: 1.55;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.6;
     color: var(--ink);
-    margin: 0 0 20px;
-    max-width: 56ch;
+    margin: 0 0 0;
   }
 
   /* =========================================================================
@@ -284,46 +382,56 @@
   .yellow-cta {
     background: var(--yellow);
     border: 1px solid var(--ink);
-    width: min(935px, 100%);
-    margin: 32px auto 56px;
-    padding: 40px 48px;
+    width: 936px;
+    max-width: 100%;
+    margin: 92px auto;
+    padding: 48px 105px;
     position: relative;
     overflow: hidden;
     text-align: center;
-    min-height: 252px;
+    min-height: 254px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 14px;
+    gap: 25px;
+    box-shadow: 0px 4px 4px 0px rgba(0,0,0,0.25);
   }
   .yellow-cta::before {
-    content: "C";
+    content: "";
     position: absolute;
-    left: 56px;
+    left: 0;
     top: 50%;
     transform: translateY(-50%);
-    font-family: "UnifrakturCook", serif;
-    font-weight: 700;
-    font-size: 280px;
-    line-height: .8;
+    width: 285px;
+    height: 335px;
+    background-image: url("assets/decoration-c.svg");
+    background-size: 285px 335px;
+    background-repeat: no-repeat;
     color: var(--yellow-soft);
+    /* Use SVG mask so currentColor controls the fill */
+    -webkit-mask: url("assets/decoration-c.svg") left center / 285px 335px no-repeat;
+            mask: url("assets/decoration-c.svg") left center / 285px 335px no-repeat;
+    background-image: none;
+    background-color: var(--yellow-soft);
     pointer-events: none;
-    user-select: none;
     z-index: 0;
   }
   .yellow-cta > * { position: relative; z-index: 1; }
   .yellow-cta h3 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
-    font-size: 32px;
+    font-size: 40px;
+    line-height: 1.3;
+    letter-spacing: 0;
     margin: 0;
     color: var(--ink);
-    letter-spacing: -.005em;
   }
   .yellow-cta p {
-    font-family: "Source Serif 4", Georgia, serif;
-    font-size: 18px;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 1.5;
     color: var(--ink);
     margin: 0;
   }
@@ -331,12 +439,13 @@
     display: inline-block;
     background: var(--ink);
     color: var(--white);
-    padding: 12px 28px;
-    font-family: "DM Sans", sans-serif;
-    font-size: 14px;
-    font-weight: 500;
+    padding: 10px 24px;
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 700;
     border: 0;
-    margin-top: 8px;
+    margin-top: 0;
+    line-height: 1.5;
   }
   .yellow-cta .btn:hover { background: var(--blue); }
 
@@ -346,8 +455,9 @@
   .grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px;
-    margin-bottom: 24px;
+    gap: 44px;
+    margin-bottom: 44px;
+    align-items: start;
   }
   @media (max-width: 880px) { .grid { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
@@ -356,6 +466,9 @@
     background: var(--white);
     border: 1px solid var(--ink);
     display: flex; flex-direction: column;
+    position: relative;
+    box-shadow: 6px 6px 6px 0px rgba(0,0,0,0.15);
+    transition: transform .18s ease, box-shadow .18s ease;
   }
   article.story .img-frame {
     aspect-ratio: 4/3;
@@ -367,28 +480,32 @@
   }
   article.story .img-frame img {
     width: 100%; height: 100%;
-    object-fit: cover; display: block;
+    object-fit: cover;
+    object-position: 50% 50%; /* center default; smart-crop refines via JS */
+    display: block;
+    transition: object-position .3s ease;
   }
   article.story .body {
-    padding: 22px 24px 26px;
+    padding: 24px 24px 28px;
     display: flex; flex-direction: column;
     flex: 1;
   }
   article.story h3 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
-    font-size: 22px;
-    line-height: 1.2;
-    letter-spacing: -.005em;
+    font-size: 26px;
+    line-height: 1.3;
+    letter-spacing: 0;
     margin: 0 0 14px;
     color: var(--ink);
   }
-  article.story h3 a:hover { color: var(--blue); }
-  article.story .byline { margin-bottom: 14px; font-size: 13px; }
+  article.story h3 a { color: inherit; }
+  article.story .byline { margin-bottom: 14px; font-size: 16px; letter-spacing: .01em; }
   article.story .excerpt {
-    font-family: "Source Serif 4", Georgia, serif;
-    font-size: 15px;
-    line-height: 1.55;
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.6;
     color: var(--ink);
     margin: 0;
     flex: 1;
@@ -406,7 +523,7 @@
     background: var(--ink);
     color: var(--white);
     padding: 12px 32px;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: 14px;
     font-weight: 500;
     border: 0;
@@ -432,8 +549,9 @@
     footer.site .cols { grid-template-columns: 1fr; gap: 36px; }
   }
   footer.site .wordmark { color: var(--white); margin-bottom: 28px; display: inline-block; }
+  footer.site .wordmark img { filter: invert(1) brightness(2); height: 60px; }
   footer.site h5 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-style: italic;
     font-weight: 700;
     font-size: 13px;
@@ -443,7 +561,7 @@
     margin: 0 0 12px;
   }
   footer.site .mission {
-    font-family: "Source Serif 4", Georgia, serif;
+    font-family: var(--font-serif);
     font-style: italic;
     font-size: 19px;
     line-height: 1.4;
@@ -452,7 +570,7 @@
     max-width: 460px;
   }
   footer.site address {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-style: normal;
     font-size: 14px;
     line-height: 1.6;
@@ -473,7 +591,7 @@
   footer.site .socials a:hover { background: var(--yellow); }
   footer.site .socials svg { width: 16px; height: 16px; }
   footer.site .colophon {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: 13px;
     color: var(--text-muted);
     border-top: 1px solid rgba(255,255,255,.12);
@@ -501,7 +619,7 @@
     margin: 32px 0;
   }
   .error-box .label {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-style: italic;
     font-weight: 700;
     text-transform: uppercase;
@@ -511,14 +629,14 @@
     margin-bottom: 12px;
   }
   .error-box h3 {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
     font-size: 26px;
     margin: 0 0 14px;
     color: var(--ink);
   }
   .error-box p {
-    font-family: "Source Serif 4", serif;
+    font-family: var(--font-serif);
     font-size: 16px;
     color: var(--text-body);
     margin: 0 0 12px;
@@ -532,7 +650,7 @@
   }
   .error-box .actions { display: flex; gap: 12px; margin-top: 16px; flex-wrap: wrap; }
   .error-box button {
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: 14px;
     font-weight: 500;
     padding: 10px 20px;
@@ -551,13 +669,7 @@
      ========================================================================= */
   .placeholder-c {
     width: 100%; height: 100%;
-    background: var(--yellow);
-    display: flex; align-items: center; justify-content: center;
-    font-family: "UnifrakturCook", serif;
-    font-weight: 700;
-    font-size: 220px;
-    line-height: 1;
-    color: var(--yellow-soft);
+    background: var(--yellow) url("assets/logo-c.png") center/65% no-repeat;
   }
   .placeholder-bubble {
     width: 100%; height: 100%;
@@ -612,7 +724,7 @@
   }
   .drawer-title {
     display: inline-flex; align-items: center; gap: 14px;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
     font-size: 22px;
     color: var(--ink);
@@ -623,19 +735,8 @@
     background: var(--ink);
     flex: 0 0 22px;
   }
-  .drawer-logo-slot {
-    /* Placeholder box for the logo — a gray rect with the word "Logo" centered.
-       Replace contents with the actual wordmark/SVG when finalized. */
-    display: inline-flex; align-items: center; justify-content: center;
-    background: #D9D9D9;
-    color: var(--ink);
-    font-family: "DM Sans", sans-serif;
-    font-weight: 700;
-    font-size: 16px;
-    padding: 12px 32px;
-    min-width: 130px;
-    min-height: 44px;
-  }
+  .drawer-logo-slot { display: inline-flex; align-items: center; line-height: 0; }
+  .drawer-logo-slot img { display: block; height: 42px; width: auto; max-width: 220px; object-fit: contain; }
   .drawer-back, .drawer-close {
     background: none; border: 0;
     width: 36px; height: 36px;
@@ -656,7 +757,7 @@
   .drawer-item {
     display: flex; align-items: center; gap: 18px;
     padding: 18px 0;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 700;
     font-size: 22px;
     color: var(--ink);
@@ -707,7 +808,7 @@
     color: var(--white);
     text-align: center;
     padding: 16px 24px;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-weight: 500;
     font-size: 16px;
     border: 0;
@@ -723,7 +824,7 @@
   @media (max-width: 720px) {
     /* Header */
     header.top { height: 70px; }
-    .wordmark { font-size: 28px; }
+    .wordmark img { height: 36px; }
     nav.top-nav { display: none; }
     .hamburger { display: inline-flex; }
 
@@ -735,14 +836,25 @@
     .feature h2 { font-size: 26px; }
     .feature .excerpt { font-size: 16px; }
 
-    /* Yellow CTA: tighter mobile sizing */
     .yellow-cta {
       width: calc(100% - 40px);
       margin: 24px 20px 36px;
-      padding: 36px 24px;
+      padding: 180px 24px 32px;
       min-height: 0;
+      text-align: center;
+      align-items: center;
     }
-    .yellow-cta::before { font-size: 200px; left: 20px; }
+    .yellow-cta::before {
+      left: 50%;
+      top: 20px;
+      transform: translate(-50%, 0);
+      width: 140px;
+      height: 165px;
+      -webkit-mask-size: 140px 165px;
+              mask-size: 140px 165px;
+      -webkit-mask-position: center;
+              mask-position: center;
+    }
     .yellow-cta h3 { font-size: 26px; }
     .yellow-cta p { font-size: 16px; }
 
@@ -768,7 +880,7 @@
     }
     article.story .img-frame img { width: 100%; height: 100%; object-fit: cover; }
     article.story .placeholder-c {
-      font-size: 80px;
+      background-size: 70%;
     }
     article.story .body {
       padding: 0;
@@ -806,37 +918,49 @@
      ========================================================================= */
   .nav-group { position: relative; display: inline-block; }
   .nav-trigger {
-    display: inline-flex; align-items: center; gap: 6px;
+    display: inline-flex; align-items: center; gap: 8px;
     padding: 10px 18px;
-    font-family: "DM Sans", sans-serif;
-    font-size: 16px; font-weight: 500;
+    font-family: var(--font-sans);
+    font-size: 18px; font-weight: 700;
+    line-height: 1.5;
     color: var(--ink);
     background: none; border: 0;
     cursor: pointer;
+    white-space: nowrap;
   }
   .nav-trigger .caret { transition: transform .2s; }
   .nav-trigger[aria-expanded="true"] .caret { transform: rotate(180deg); }
   .nav-dropdown {
     position: absolute;
-    top: calc(100% + 4px);
+    top: 100%;
+    padding-top: 8px;
     left: 0;
     min-width: 240px;
-    background: var(--white);
-    border: 1px solid var(--ink);
-    box-shadow: 4px 4px 0 rgba(0,0,0,.1);
-    padding: 10px 0;
     z-index: 30;
     display: none;
   }
+  .nav-dropdown::before {
+    content: '';
+    position: absolute;
+    inset: 8px 0 0;
+    background: var(--white);
+    border: 1px solid var(--ink);
+    box-shadow: 6px 6px 0 rgba(0,0,0,0.1);
+    z-index: -1;
+  }
+  .nav-group[data-open="true"] .nav-dropdown { display: block; }
   .nav-group[data-open="true"] .nav-dropdown { display: block; }
   .nav-dropdown a {
     display: block;
     padding: 10px 22px;
-    font-family: "DM Sans", sans-serif;
+    font-family: var(--font-sans);
     font-size: 15px; font-weight: 500;
     color: var(--ink);
     white-space: nowrap;
+    position: relative;
   }
+  .nav-dropdown a:first-of-type { padding-top: 18px; }
+  .nav-dropdown a:last-of-type { padding-bottom: 18px; }
   .nav-dropdown a:hover { background: var(--bg); color: var(--blue); }
   @media (max-width: 720px) {
     .nav-group { display: none; }
@@ -851,7 +975,7 @@
      ============================================================ -->
 <header class="top">
   <div class="wrap">
-    <a href="index.html" class="wordmark">The Contributor</a>
+    <a href="index.html" class="wordmark" aria-label="The Contributor — Home"><img src="assets/logo-text.png" alt="The Contributor" /></a>
     <nav class="top-nav">
             <div class="nav-group" data-nav="about">
         <button class="nav-trigger" aria-expanded="false" aria-haspopup="true">About Us
@@ -880,9 +1004,9 @@
           <a href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a>
         </div>
       </div>
-      <a href="page.html?slug=donate" class="btn">Donate</a>
-      <a href="page.html?slug=pay" class="btn primary">Buy a Paper</a>
-      <button class="search-btn" aria-label="Search">
+      <a href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener" class="btn">Donate</a>
+      <a href="https://thecontributor.org/pay/" target="_blank" rel="noopener" class="btn primary">Buy a Paper</a>
+      <button class="search-btn" aria-label="Search" onclick="(function(){var q=prompt('Search The Contributor:');if(q)window.open('https://www.google.com/search?q='+encodeURIComponent(q+' site:thecontributor.org'),'_blank');})()">
         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
           <circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/>
           <line x1="13.5" y1="13.5" x2="17.5" y2="17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
@@ -909,7 +1033,7 @@
   <!-- Top-level pane -->
   <div class="drawer-pane" data-active="true" data-pane="top">
     <div class="drawer-header">
-      <span class="drawer-logo-slot">Logo</span>
+      <span class="drawer-logo-slot"><img src="assets/logo-text.png" alt="The Contributor" /></span>
       <button class="drawer-close" aria-label="Close menu">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
@@ -933,10 +1057,7 @@
             <path d="M5 2l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
           </svg>
         </button></li>
-        <li><a class="drawer-item" href="#">
-          <span class="bullet"></span>
-          <span class="grow">Search</span>
-        </a></li>
+        <li><a class="drawer-item" href="#" onclick="event.preventDefault();var q=prompt('Search The Contributor:');if(q)window.open('https://www.google.com/search?q='+encodeURIComponent(q+' site:thecontributor.org'),'_blank');"><span class="bullet"></span><span class="grow">Search</span></a></li>
         <li><a class="drawer-item" href="page.html?slug=find-a-vendor">
           <span class="bullet"></span>
           <span class="grow">Find a Paper</span>
@@ -952,7 +1073,7 @@
       </ul>
     </div>
     <div class="drawer-footer">
-      <a class="drawer-donate" href="page.html?slug=donate">Donate</a>
+      <a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a>
     </div>
   </div>
 
@@ -983,7 +1104,7 @@
       </div>
     </div>
     <div class="drawer-footer">
-      <a class="drawer-donate" href="page.html?slug=donate">Donate</a>
+      <a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a>
     </div>
   </div>
 
@@ -1015,7 +1136,7 @@
       </div>
     </div>
     <div class="drawer-footer">
-      <a class="drawer-donate" href="page.html?slug=donate">Donate</a>
+      <a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a>
     </div>
   </div>
 
@@ -1120,7 +1241,7 @@
   <div class="wrap">
     <div class="cols">
       <div>
-        <span class="wordmark">The Contributor</span>
+        <span class="wordmark"><img src="assets/logo-text.png" alt="The Contributor" /></span>
         <h5>Our Mission</h5>
         <p class="mission">Empowering our homeless neighbors to achieve income, dignity, housing and community.</p>
         <h5>Our Vision</h5>
@@ -1144,10 +1265,10 @@
         </address>
         <h5 style="margin-top:24px">Follow Us</h5>
         <div class="socials">
-          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7c0-1 .5-2 2-2h2V1h-3c-3 0-5 2-5 5v4H6v4h3v8h4z"/></svg></a>
-          <a href="#" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6c-.5.7-1 1-1.5 1.5.5 7-5 12-12 12-2 0-4-.5-5.5-1.5 2 .5 5 0 6.5-1-2 0-3.5-1.5-4-3 .5 0 1 0 2-.5-2 0-4-2-4-4 1 .5 1 .5 2 .5C1 9 1 6 2 4c2 3 5.5 5 9 5-.5-3 2-5 4.5-5 1 0 2 .5 3 1 1-.5 2-.5 3-1-.5 1-1 2-2 2.5.5 0 1.5-.5 2-1z"/></svg></a>
-          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></a>
-          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 4c.5 2 2 3.5 4 4v3.5c-1.5 0-3-.5-4-1V16c0 3-2.5 5.5-5.5 5.5S5 19 5 16s2.5-5.5 5.5-5.5c.5 0 1 0 1.5.2V14c-.5-.2-1-.3-1.5-.3-1.3 0-2.4 1-2.4 2.3s1 2.3 2.4 2.3c1.3 0 2.4-1 2.4-2.3V4h3z"/></svg></a>
+          <a href="https://www.facebook.com/ContributorNashville/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7c0-1 .5-2 2-2h2V1h-3c-3 0-5 2-5 5v4H6v4h3v8h4z"/></svg></a>
+          <a href="https://x.com/TheContributor" target="_blank" rel="noopener" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6c-.5.7-1 1-1.5 1.5.5 7-5 12-12 12-2 0-4-.5-5.5-1.5 2 .5 5 0 6.5-1-2 0-3.5-1.5-4-3 .5 0 1 0 2-.5-2 0-4-2-4-4 1 .5 1 .5 2 .5C1 9 1 6 2 4c2 3 5.5 5 9 5-.5-3 2-5 4.5-5 1 0 2 .5 3 1 1-.5 2-.5 3-1-.5 1-1 2-2 2.5.5 0 1.5-.5 2-1z"/></svg></a>
+          <a href="https://www.instagram.com/thecontributor/" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/></svg></a>
+          <a href="https://www.tiktok.com/@contributorstreetpaper" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 4c.5 2 2 3.5 4 4v3.5c-1.5 0-3-.5-4-1V16c0 3-2.5 5.5-5.5 5.5S5 19 5 16s2.5-5.5 5.5-5.5c.5 0 1 0 1.5.2V14c-.5-.2-1-.3-1.5-.3-1.3 0-2.4 1-2.4 2.3s1 2.3 2.4 2.3c1.3 0 2.4-1 2.4-2.3V4h3z"/></svg></a>
         </div>
       </div>
     </div>
@@ -1282,19 +1403,26 @@
     return localize((tag && tag.link) || '#');
   }
 
-  /* ---------- placeholder (matches Figma) ---------- */
-  function placeholder(idx) {
-    if (idx % 3 === 1) {
-      return el('div', { class: 'placeholder-bubble', html:
-        '<svg viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">' +
-        '<path d="M15 25h70v45H55l-12 12-3-12H15z"/>' +
-        '<circle cx="35" cy="48" r="4" fill="#FFC525"/>' +
-        '<circle cx="50" cy="48" r="4" fill="#FFC525"/>' +
-        '<circle cx="65" cy="48" r="4" fill="#FFC525"/>' +
-        '</svg>'
-      });
-    }
-    return el('div', { class: 'placeholder-c' }, 'C');
+  /* ---------- placeholder (matches Figma — 3 brand variants, deterministic by slug) ---------- */
+  function placeholder(post) {
+    // Hash the slug so the same article ALWAYS shows the same placeholder
+    // across refreshes — but the set of articles gets a varied mix.
+    const slug = (post && post.slug) || (post && post.id) || '';
+    let hash = 0;
+    for (let i = 0; i < slug.length; i++) hash = ((hash << 5) - hash + slug.charCodeAt(i)) | 0;
+    const variant = Math.abs(hash) % 3;
+    const assets = ['logo-c.png', 'placeholder-chat.svg', 'placeholder-pencil.svg'];
+    const file = assets[variant];
+    return el('div', { class: 'placeholder placeholder-' + variant, style:
+      `background: var(--yellow); position: relative; overflow: hidden; width: 100%; height: 100%;`
+    },
+      el('div', { style:
+        `position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); ` +
+        `width: 60%; aspect-ratio: 1; background-color: var(--yellow-soft); ` +
+        `-webkit-mask: url("assets/${file}") center / contain no-repeat; ` +
+                `mask: url("assets/${file}") center / contain no-repeat;`
+      })
+    );
   }
 
   /* ---------- byline ---------- */
@@ -1311,9 +1439,9 @@
     const src = getImage(post);
     const wrap = el('div', { class: 'img-frame' });
     if (src) {
-      wrap.appendChild(el('img', { src, alt: decode(post.title.rendered), class: 'img', loading: idx < 2 ? 'eager' : 'lazy' }));
+      wrap.appendChild(el('img', { crossorigin: 'anonymous', alt: decode(post.title.rendered), class: 'img', loading: idx < 2 ? 'eager' : 'lazy', src }));
     } else {
-      wrap.appendChild(placeholder(idx));
+      wrap.appendChild(placeholder(post));
     }
     if (isFeature && captionText) {
       wrap.appendChild(el('figcaption', null, captionText));
@@ -1372,15 +1500,13 @@
 
     $('hero-slot').innerHTML = '';
     $('hero-slot').appendChild(renderFeature(posts[0], 0, {
-      labelStyle: 'gray',
-      caption: getCaption(posts[0])
+      labelStyle: 'gray'
     }));
 
     $('feature-slot').innerHTML = '';
     if (posts[1]) {
       $('feature-slot').appendChild(renderFeature(posts[1], 1, {
-        labelStyle: 'blue',
-        caption: getCaption(posts[1]) || ('Image credit: ' + getAuthor(posts[1]))
+        labelStyle: 'blue'
       }));
     }
 
@@ -1588,5 +1714,8 @@
 })();
 </script>
 
+<script src="assets/pico.js"></script>
+<script src="smart-crop.js"></script>
+<script src="search.js"></script>
 </body>
 </html>
