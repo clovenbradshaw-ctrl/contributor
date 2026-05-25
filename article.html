@@ -270,8 +270,9 @@
   }
   .byline a {
     color: var(--blue); font-weight: 700;
-    text-decoration: underline; text-underline-offset: 3px;
+    text-decoration: none; text-underline-offset: 3px;
   }
+  .byline a:hover { text-decoration: underline; }
   .byline .sep { color: var(--text-muted); margin: 0 6px; }
 
   /* Featured image — wider than the body column */
@@ -369,14 +370,28 @@
   .article-prose img,
   .article-prose figure {
     max-width: 100% !important;
+    width: auto !important;       /* respect natural size; don't upscale */
     height: auto !important;
     aspect-ratio: auto !important;
     margin: 36px auto;
     display: block;
   }
   .article-prose figure img {
-    width: 100%;
+    max-width: 100%;
+    width: auto;
     height: auto !important;
+    margin: 0 auto;
+  }
+  /* Two-column treatment for WP alignleft / alignright (uniform 45% width) */
+  .article-prose .wp-block-image.alignleft,
+  .article-prose figure.alignleft,
+  .article-prose img.alignleft {
+    float: left; margin: 8px 32px 24px 0; max-width: 45%;
+  }
+  .article-prose .wp-block-image.alignright,
+  .article-prose figure.alignright,
+  .article-prose img.alignright {
+    float: right; margin: 8px 0 24px 32px; max-width: 45%;
   }
   .article-prose figcaption {
     font-style: italic; font-size: 14px; color: var(--text-body);
@@ -1016,6 +1031,34 @@
 
     // Body content — WordPress returns full HTML in content.rendered
     $('prose').innerHTML = post.content.rendered || '';
+
+    // De-dupe the featured image: WP authors often embed the same image
+    // inline in the body, which makes it appear twice. Normalize filenames
+    // (strip size suffixes like -768x1024, -scaled, query strings) so we
+    // catch all common WP-CDN variants.
+    if (img) {
+      const norm = (u) => {
+        if (!u) return '';
+        let base = u.split('/').pop().split('?')[0].toLowerCase();
+        base = base.replace(/-\d+x\d+(?=\.[a-z]+$)/i, ''); //  -768x1024
+        base = base.replace(/-scaled(?=\.[a-z]+$)/i, '');  //  -scaled
+        base = base.replace(/\.(jpg|jpeg|png|webp|avif|gif)$/i, '');
+        return base;
+      };
+      const featuredKey = norm(img);
+      // Remove every prose image whose normalized filename matches.
+      $('prose').querySelectorAll('img').forEach(im => {
+        if (norm(im.src) === featuredKey) {
+          const wrap = im.closest('figure, .wp-block-image') || im.closest('p') || im;
+          // If wrapper is a <p> containing other meaningful text, just remove img
+          if (wrap.tagName === 'P' && (wrap.textContent || '').replace(/\s+/g, '').length > 40) {
+            im.remove();
+          } else {
+            wrap.remove();
+          }
+        }
+      });
+    }
 
     // Strip out any inline width/height attributes from images so our CSS rules
     // (max-width:100%) take precedence
