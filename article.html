@@ -609,6 +609,376 @@
     .nav-group { display: none; }
   }
 
+  /* =========================================================================
+     PRINT — on-brand newspaper edition
+     Charcoal ink, single sunflower accent rule, optional brick eyebrow,
+     Figtree headlines, Libre Baskerville body with drop cap.
+     ========================================================================= */
+  .print-only { display: none; }
+
+  @media print {
+    @page {
+      size: letter;
+      margin: 0.7in 0.75in 0.85in 0.75in;
+    }
+    @page {
+      @bottom-left {
+        content: "The Contributor — Nashville's Street Paper";
+        font-family: "Figtree", Helvetica, sans-serif;
+        font-style: italic;
+        font-size: 8pt;
+        color: #808080;
+      }
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-family: "Figtree", Helvetica, sans-serif;
+        font-size: 8pt;
+        color: #808080;
+      }
+    }
+
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+    }
+
+    html, body {
+      background: #ffffff !important;
+      color: #222222 !important;
+    }
+    body {
+      font-size: 11pt !important;
+      line-height: 1.55 !important;
+      -webkit-font-smoothing: auto;
+    }
+
+    /* Hide all digital chrome */
+    nav.top-nav,
+    .hamburger,
+    .subnav,
+    .drawer, .drawer-overlay,
+    footer.site,
+    .nav-group, .nav-dropdown,
+    .article-actions,
+    .related-divider, .related-heading, #related,
+    #loading, #error,
+    .skeleton {
+      display: none !important;
+    }
+
+    /* Reveal print-only block */
+    .print-only { display: block !important; }
+
+    a { color: #222222; text-decoration: none; }
+
+    /* === Masthead (re-uses the site header — wordmark on left, tagline on right) === */
+    header.top {
+      background: transparent !important;
+      height: auto !important;
+      display: block !important;
+      padding: 0 0 5pt !important;
+      margin: 0 0 24pt !important;
+      border-bottom: 0.6pt solid #222 !important;
+      position: relative;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    header.top::after {
+      content: "";
+      display: block;
+      height: 2.5pt;
+      background: #FFC525 !important;
+      margin-top: 3pt;
+    }
+    header.top .wrap {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: flex-end !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+      gap: 16pt;
+      width: 100% !important;
+    }
+    header.top .wrap::after {
+      content: "Nashville's Street Paper  ·  thecontributor.org";
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: 8.5pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #484848;
+      white-space: nowrap;
+      padding-bottom: 3pt;
+    }
+    .wordmark { display: inline-block !important; }
+    .wordmark img {
+      height: 38pt !important;
+      max-width: 3in !important;
+      width: auto !important;
+      filter: none !important;
+    }
+
+    /* === Article container reset === */
+    .article-shell { background: transparent !important; padding: 0 !important; }
+    .article-container,
+    .col-hero,
+    .col-body {
+      max-width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* === Article header === */
+    .article-header { margin-bottom: 14pt !important; }
+    #cat-link {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-style: italic !important;
+      font-weight: 700 !important;
+      font-size: 9pt !important;
+      letter-spacing: 0.18em !important;
+      text-transform: uppercase !important;
+      color: #BD261D !important;
+      display: inline-block !important;
+      margin: 0 0 10pt !important;
+      text-decoration: none !important;
+      border: 0 !important;
+      padding: 0 !important;
+    }
+    #cat-link::after {
+      content: "";
+      display: block;
+      width: 38pt;
+      height: 2pt;
+      background: #FFC525 !important;
+      margin-top: 5pt;
+    }
+    .article-header h1 {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 26pt !important;
+      line-height: 1.18 !important;
+      letter-spacing: -0.005em !important;
+      margin: 0 0 12pt !important;
+      color: #222 !important;
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }
+    .byline {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-size: 10pt !important;
+      line-height: 1.5 !important;
+      color: #484848 !important;
+      margin-bottom: 0 !important;
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }
+    .byline a {
+      color: #2275BB !important;
+      font-weight: 700 !important;
+      text-decoration: none !important;
+    }
+    .byline .sep { color: #BEBEBE !important; padding: 0 4pt; }
+
+    /* === Featured image === */
+    .featured {
+      margin: 16pt 0 6pt !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      text-align: center;
+    }
+    .featured img {
+      max-width: 100% !important;
+      max-height: 4.5in !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 0 auto !important;
+      display: block !important;
+    }
+    .featured figcaption {
+      font-family: "Libre Baskerville", Georgia, serif !important;
+      font-style: italic !important;
+      font-size: 8.5pt !important;
+      line-height: 1.4 !important;
+      color: #808080 !important;
+      text-align: right !important;
+      margin-top: 6pt !important;
+    }
+
+    /* === Prose === */
+    .article-prose {
+      font-family: "Libre Baskerville", Georgia, serif !important;
+      font-size: 10.5pt !important;
+      line-height: 1.6 !important;
+      color: #222 !important;
+      margin-top: 14pt !important;
+      text-align: left;
+      hyphens: auto;
+    }
+    .article-prose p {
+      margin: 0 0 9pt !important;
+      orphans: 3;
+      widows: 3;
+    }
+    /* Drop cap — Figtree, brick, lines up with body baseline */
+    .article-prose > p:first-of-type::first-letter {
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-weight: 700;
+      float: left;
+      font-size: 42pt;
+      line-height: 0.88;
+      padding: 3pt 7pt 0 0;
+      color: #BD261D !important;
+    }
+    .article-prose a {
+      color: #2275BB !important;
+      text-decoration: none !important;
+      font-style: normal !important;
+      font-family: inherit !important;
+    }
+    /* Footnote-style URL after truly external links only */
+    .article-prose a[href^="http"]:not([href*="thecontributor.org"]):not([href*="article.html"]):not([href*="page.html"]):not([href*="index.html"])::after {
+      content: "  (" attr(href) ")";
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-style: italic;
+      font-size: 8pt;
+      color: #808080;
+      word-break: break-all;
+    }
+    .article-prose h2,
+    .article-prose h3 {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      color: #222 !important;
+      font-weight: 700 !important;
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+      margin: 16pt 0 6pt !important;
+    }
+    .article-prose h2 { font-size: 15pt !important; line-height: 1.25 !important; }
+    .article-prose h3 { font-size: 12.5pt !important; line-height: 1.25 !important; }
+    .article-prose blockquote {
+      margin: 16pt 0 !important;
+      padding: 2pt 0 2pt 14pt !important;
+      border-left: 2.5pt solid #FFC525 !important;
+      font-family: "Libre Baskerville", Georgia, serif !important;
+      font-style: italic !important;
+      font-weight: 400 !important;
+      font-size: 13pt !important;
+      line-height: 1.45 !important;
+      color: #222 !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .article-prose blockquote cite {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-style: normal !important;
+      font-size: 8.5pt !important;
+      letter-spacing: 0.14em !important;
+      text-transform: uppercase !important;
+      color: #484848 !important;
+      display: block;
+      margin-top: 8pt;
+    }
+    .article-prose ul,
+    .article-prose ol { margin: 0 0 9pt 16pt !important; padding: 0 !important; }
+    .article-prose li { margin-bottom: 3pt !important; }
+    .article-prose figure {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      margin: 14pt auto !important;
+      text-align: center;
+      float: none !important;
+    }
+    .article-prose img,
+    .article-prose .wp-block-image.alignleft,
+    .article-prose .wp-block-image.alignright,
+    .article-prose figure.alignleft,
+    .article-prose figure.alignright,
+    .article-prose img.alignleft,
+    .article-prose img.alignright {
+      float: none !important;
+      max-width: 100% !important;
+      max-height: 4in !important;
+      width: auto !important;
+      height: auto !important;
+      margin: 14pt auto !important;
+      display: block !important;
+    }
+    .article-prose figcaption {
+      font-family: "Libre Baskerville", Georgia, serif !important;
+      font-style: italic !important;
+      font-size: 8.5pt !important;
+      color: #808080 !important;
+      text-align: right !important;
+      margin-top: 4pt !important;
+    }
+    .article-prose pre {
+      font-size: 8.5pt !important;
+      background: #F5F5F5 !important;
+      border: 0.5pt solid #BEBEBE !important;
+      padding: 6pt 8pt !important;
+      page-break-inside: avoid;
+    }
+
+    /* === Print colophon (foot of the article) === */
+    .print-colophon {
+      margin: 34pt 0 0 !important;
+      padding: 18pt 0 0 !important;
+      border-top: 0.6pt solid #222 !important;
+      position: relative;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      text-align: center;
+    }
+    .print-colophon::before {
+      content: "";
+      position: absolute;
+      top: -2pt;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48pt;
+      height: 3.5pt;
+      background: #FFC525 !important;
+    }
+    .print-colophon .pc-tag {
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 8.5pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #BD261D !important;
+      margin: 4pt 0 8pt;
+    }
+    .print-colophon .pc-msg {
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-style: italic;
+      font-size: 10pt;
+      line-height: 1.45;
+      color: #222;
+      max-width: 4.6in;
+      margin: 0 auto 12pt;
+    }
+    .print-colophon .pc-meta {
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-size: 7.5pt;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #808080;
+      margin: 0 0 3pt;
+    }
+    .print-colophon .pc-url {
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 9pt;
+      color: #2275BB;
+      word-break: break-all;
+      display: block;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -827,6 +1197,14 @@
       <div id="related"></div>
     </div>
 
+    <!-- Print colophon — hidden on screen, only shown when printed -->
+    <aside class="print-only print-colophon col-body" aria-hidden="true">
+      <div class="pc-tag">Read · Share · Support</div>
+      <p class="pc-msg">The Contributor is sold on the streets of Nashville by neighbors working their way out of homelessness. Vendors keep what they earn — your purchase is their paycheck.</p>
+      <div class="pc-meta">Printed from</div>
+      <div class="pc-url" id="print-url">thecontributor.org</div>
+    </aside>
+
   </article>
   </div>
 </main>
@@ -1010,6 +1388,10 @@
 
     $('title').textContent = decode(post.title.rendered);
     document.title = decode(post.title.rendered) + ' — The Contributor';
+
+    // Populate the print colophon URL with the canonical article URL
+    const printUrl = $('print-url');
+    if (printUrl) printUrl.textContent = post.link || location.href;
 
     $('author-link').href = getAuthorLink(post);
     $('author-link').textContent = getAuthor(post);
