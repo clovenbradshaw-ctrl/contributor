@@ -998,6 +998,329 @@
     .nav-group { display: none; }
   }
 
+  /* =========================================================================
+     PRINT — "Today's Edition" front-page treatment
+     Wordmark masthead with sunflower rule, hero + two-column story flow.
+     ========================================================================= */
+  .print-only { display: none; }
+
+  @media print {
+    @page {
+      size: letter;
+      margin: 0.6in 0.7in 0.85in 0.7in;
+    }
+    @page {
+      @bottom-left {
+        content: "The Contributor — Nashville's Street Paper";
+        font-family: "Figtree", Helvetica, sans-serif;
+        font-style: italic;
+        font-size: 8pt;
+        color: #808080;
+      }
+      @bottom-right {
+        content: counter(page) " / " counter(pages);
+        font-family: "Figtree", Helvetica, sans-serif;
+        font-size: 8pt;
+        color: #808080;
+      }
+    }
+
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+      box-shadow: none !important;
+      text-shadow: none !important;
+      transform: none !important;
+      transition: none !important;
+    }
+
+    html, body {
+      background: #ffffff !important;
+      color: #222222 !important;
+    }
+    body {
+      font-size: 11pt !important;
+      line-height: 1.5 !important;
+      -webkit-font-smoothing: auto;
+    }
+
+    /* Hide all digital chrome */
+    nav.top-nav,
+    .hamburger,
+    .subnav,
+    .drawer, .drawer-overlay,
+    footer.site,
+    .nav-group, .nav-dropdown,
+    .filters-bar, .filters-popover,
+    .yellow-cta,
+    .see-more-row,
+    #loading, #error,
+    .skeleton {
+      display: none !important;
+    }
+
+    .print-only { display: block !important; }
+
+    a { color: #222222; text-decoration: none; }
+
+    /* === Masthead === */
+    header.top {
+      background: transparent !important;
+      height: auto !important;
+      display: block !important;
+      padding: 0 0 5pt !important;
+      margin: 0 0 8pt !important;
+      border-bottom: 0.6pt solid #222 !important;
+      position: relative;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    header.top::after {
+      content: "";
+      display: block;
+      height: 2.5pt;
+      background: #FFC525 !important;
+      margin-top: 3pt;
+    }
+    header.top .wrap {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: flex-end !important;
+      padding: 0 !important;
+      max-width: 100% !important;
+      gap: 16pt;
+      width: 100% !important;
+    }
+    header.top .wrap::after {
+      content: "Nashville's Street Paper  ·  thecontributor.org";
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-style: italic;
+      font-weight: 500;
+      font-size: 8.5pt;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #484848;
+      white-space: nowrap;
+      padding-bottom: 3pt;
+    }
+    .wordmark { display: inline-block !important; }
+    .wordmark img {
+      height: 38pt !important;
+      max-width: 3in !important;
+      width: auto !important;
+      filter: none !important;
+    }
+
+    /* === Edition strap line (date + tagline) — print-only === */
+    .print-strap {
+      display: flex !important;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 0 0 22pt !important;
+      padding: 0 !important;
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-style: italic;
+      font-size: 8.5pt;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #484848;
+    }
+    .print-strap .ps-edition { color: #BD261D !important; font-weight: 700; }
+
+    /* === Main wrap === */
+    main.wrap, .wrap {
+      max-width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    /* === Hero feature (story-of-the-day) — image left, headline right === */
+    #hero-slot { margin: 0 0 18pt !important; page-break-inside: avoid; break-inside: avoid; }
+    #hero-slot .feature,
+    .card.feature {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 18pt !important;
+      padding: 0 !important;
+      border: 0 !important;
+      background: transparent !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    #hero-slot .feature .img-frame,
+    .card.feature .img-frame {
+      aspect-ratio: 4 / 3 !important;
+      overflow: hidden !important;
+      background: transparent !important;
+      border: 0 !important;
+    }
+    #hero-slot .feature .img-frame .img,
+    .card.feature .img-frame .img {
+      object-fit: cover !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    #hero-slot .feature .body,
+    .card.feature .body {
+      padding: 0 !important;
+    }
+    .feature .section-label,
+    .section-label {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-style: italic !important;
+      font-weight: 700 !important;
+      font-size: 9pt !important;
+      letter-spacing: 0.18em !important;
+      text-transform: uppercase !important;
+      color: #BD261D !important;
+      margin: 0 0 8pt !important;
+      padding: 0 !important;
+      display: inline-block !important;
+    }
+    .feature h2,
+    .feature h2 a {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 22pt !important;
+      line-height: 1.18 !important;
+      letter-spacing: -0.005em !important;
+      color: #222 !important;
+      margin: 0 0 8pt !important;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+    .feature .byline,
+    .byline {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-size: 9pt !important;
+      line-height: 1.4 !important;
+      color: #484848 !important;
+      margin: 0 0 8pt !important;
+    }
+    .byline a {
+      color: #2275BB !important;
+      font-weight: 700 !important;
+      text-decoration: none !important;
+    }
+    .byline .sep { color: #BEBEBE !important; padding: 0 3pt; }
+    .feature .excerpt,
+    .excerpt {
+      font-family: "Libre Baskerville", Georgia, serif !important;
+      font-size: 10pt !important;
+      line-height: 1.5 !important;
+      color: #222 !important;
+      margin: 0 !important;
+    }
+
+    /* Divider rule between hero and grid */
+    #feature-slot { margin-top: 14pt !important; padding-top: 14pt !important; border-top: 0.5pt solid #222 !important; }
+
+    /* === Story grids — two columns, newspaper-style flow === */
+    .grid {
+      display: block !important;
+      column-count: 2 !important;
+      column-gap: 22pt !important;
+      column-rule: 0.4pt solid #BEBEBE;
+      margin: 16pt 0 !important;
+    }
+    article.story {
+      background: transparent !important;
+      border: 0 !important;
+      padding: 0 0 12pt !important;
+      margin: 0 0 12pt !important;
+      gap: 8pt !important;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      border-bottom: 0.4pt solid #BEBEBE !important;
+    }
+    article.story:last-child { border-bottom: 0 !important; }
+    article.story .img-frame {
+      aspect-ratio: 16 / 10 !important;
+      margin: 0 0 8pt !important;
+      background: transparent !important;
+      border: 0 !important;
+      overflow: hidden !important;
+    }
+    article.story .img-frame .img,
+    article.story .img-frame img {
+      object-fit: cover !important;
+      width: 100% !important;
+      height: 100% !important;
+    }
+    article.story .section-label {
+      font-size: 8pt !important;
+      letter-spacing: 0.16em !important;
+      margin-bottom: 5pt !important;
+    }
+    article.story h2,
+    article.story h3 {
+      font-family: "Figtree", Helvetica, sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 12pt !important;
+      line-height: 1.25 !important;
+      margin: 0 0 5pt !important;
+      color: #222 !important;
+    }
+    article.story .byline { font-size: 8.5pt !important; margin: 0 0 4pt !important; }
+    article.story .excerpt { font-size: 9.5pt !important; line-height: 1.45 !important; }
+
+    /* === Front-page colophon === */
+    .print-colophon {
+      margin: 28pt 0 0 !important;
+      padding: 18pt 0 0 !important;
+      border-top: 0.6pt solid #222 !important;
+      position: relative;
+      page-break-inside: avoid;
+      break-inside: avoid;
+      text-align: center;
+    }
+    .print-colophon::before {
+      content: "";
+      position: absolute;
+      top: -2pt;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48pt;
+      height: 3.5pt;
+      background: #FFC525 !important;
+    }
+    .print-colophon .pc-tag {
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 8.5pt;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #BD261D !important;
+      margin: 4pt 0 8pt;
+    }
+    .print-colophon .pc-msg {
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-style: italic;
+      font-size: 10pt;
+      line-height: 1.45;
+      color: #222;
+      max-width: 4.6in;
+      margin: 0 auto 12pt;
+    }
+    .print-colophon .pc-meta {
+      font-family: "Figtree", Helvetica, sans-serif;
+      font-size: 7.5pt;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #808080;
+      margin: 0 0 3pt;
+    }
+    .print-colophon .pc-url {
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 9pt;
+      color: #2275BB;
+      word-break: break-all;
+      display: block;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1208,6 +1531,12 @@
      ============================================================ -->
 <main class="wrap" id="main">
 
+  <!-- Print-only edition strap (date + tagline). Hidden on screen. -->
+  <div class="print-only print-strap" aria-hidden="true">
+    <span class="ps-edition">Today's Edition</span>
+    <span id="print-edition-date">Nashville, Tennessee</span>
+  </div>
+
   <div class="filters-bar">
     <button class="filters-trigger" id="filters-btn" aria-expanded="false">
       <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1264,6 +1593,14 @@
       <a class="see-more" href="index.html">See More</a>
     </div>
   </div>
+
+  <!-- Print colophon — hidden on screen. -->
+  <aside class="print-only print-colophon" aria-hidden="true">
+    <div class="pc-tag">Read · Share · Support</div>
+    <p class="pc-msg">The Contributor is sold on the streets of Nashville by neighbors working their way out of homelessness. Vendors keep what they earn — your purchase is their paycheck.</p>
+    <div class="pc-meta">Printed from</div>
+    <div class="pc-url" id="print-url">thecontributor.org</div>
+  </aside>
 </main>
 
 <!-- ============================================================
@@ -1737,6 +2074,15 @@
     initDrawer();
     initNavDropdowns();
     load(false);
+
+    // Populate print-only edition strap + colophon URL.
+    const editionDate = document.getElementById('print-edition-date');
+    if (editionDate) {
+      editionDate.textContent = 'Nashville, Tenn.  ·  ' +
+        new Date().toLocaleDateString('en-US', { weekday:'long', month:'long', day:'numeric', year:'numeric' });
+    }
+    const printUrl = document.getElementById('print-url');
+    if (printUrl) printUrl.textContent = location.origin + location.pathname;
   });
 })();
 </script>
