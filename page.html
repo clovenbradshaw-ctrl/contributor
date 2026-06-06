@@ -235,7 +235,8 @@
   .page-body > img,
   .page-body > figure:not(.alignleft):not(.alignright),
   .page-body > .wp-block-image:not(.alignleft):not(.alignright) img {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     margin: 36px auto;
   }
   .page-body img.aligncenter,
@@ -247,7 +248,8 @@
   }
   .page-body .wp-block-image.aligncenter img,
   .page-body figure.aligncenter img {
-    width: 100%;
+    width: auto;
+    max-width: 100%;
     margin: 0 auto;
   }
   /* Floated alignleft/alignright — uniform 45% so consecutive images line up */
@@ -399,7 +401,14 @@
   .page-body > .wp-block-embed:first-child,
   .page-body > .wp-block-image:first-child img,
   .page-body > figure:first-of-type {
-    max-width: var(--hero-col);
+    max-width: min(100%, var(--hero-col));
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  /* iframes / embeds have no intrinsic size — keep them filling the hero column */
+  .page-body > p:first-of-type iframe,
+  .page-body > .wp-block-embed:first-child {
     width: 100%;
   }
 
