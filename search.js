@@ -72,9 +72,13 @@
       display: flex; gap: 0;
       border-bottom: 1px solid var(--border, #BEBEBE);
       padding: 0 22px;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
+    .search-tabs::-webkit-scrollbar { display: none; }
     .search-tab {
       background: none; border: 0;
+      white-space: nowrap;
       padding: 14px 16px;
       font-family: var(--font-sans, system-ui), sans-serif;
       font-style: italic;
@@ -246,6 +250,7 @@
       <div class="search-tabs" role="tablist">
         <button class="search-tab" data-scope="all"      data-active="true" role="tab">All <span class="count"></span></button>
         <button class="search-tab" data-scope="articles" role="tab">Articles <span class="count"></span></button>
+        <button class="search-tab" data-scope="contributor" role="tab">Contributor <span class="count"></span></button>
         <button class="search-tab" data-scope="pages"    role="tab">Pages <span class="count"></span></button>
       </div>
       <div class="search-results" id="search-results">
@@ -371,7 +376,7 @@
     const authorScore  = fuzzyScore(q, authorName) * 2;    // name match is a strong signal
     let score = titleScore + excerptScore + authorScore;
     if (authorMatch) score += 200;                          // by this author → top of the list
-    return { item, titleText, exText, authorName, score, kind: 'article' };
+    return { item, titleText, exText, authorName, score, kind: 'article', authorMatch: !!authorMatch };
   }
   function scorePage(q, item) {
     const titleText = decode((item.title && item.title.rendered) || '');
@@ -551,7 +556,7 @@
       if (active) { e.preventDefault(); location.href = active.getAttribute('href'); }
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      const order = ['all', 'articles', 'pages'];
+      const order = ['all', 'articles', 'contributor', 'pages'];
       const idx = order.indexOf(scope);
       setScope(order[(idx + (e.shiftKey ? -1 : 1) + order.length) % order.length]);
     }
@@ -611,12 +616,19 @@
     return store.articlePage < store.articleTotalPages;
   }
 
+  function contributorResults() {
+    // "Contributor" = results matched by byline (articles pulled because their
+    // author's name matched the query), newest first.
+    return store.articles.filter(a => a.authorMatch);
+  }
+
   function updateCounts() {
     const aMore = hasMoreArticles() ? '+' : '';
     const counts = {
-      all:      { n: store.articles.length + store.pages.length, suffix: aMore },
-      articles: { n: store.articles.length, suffix: aMore },
-      pages:    { n: store.pages.length, suffix: '' },
+      all:         { n: store.articles.length + store.pages.length, suffix: aMore },
+      articles:    { n: store.articles.length, suffix: aMore },
+      contributor: { n: contributorResults().length, suffix: '' },
+      pages:       { n: store.pages.length, suffix: '' },
     };
     tabsEl.forEach(t => {
       const s = t.getAttribute('data-scope');
@@ -629,6 +641,7 @@
   function pool() {
     if (scope === 'all') return [...store.articles, ...store.pages].sort((a, b) => b.score - a.score);
     if (scope === 'articles') return store.articles.slice();
+    if (scope === 'contributor') return contributorResults();
     return store.pages.slice();
   }
 
@@ -649,8 +662,10 @@
 
     // Offer "Load more" when there are more cached results to reveal, or more
     // server pages of articles to fetch (the backlog beyond the first 100).
+    // The Contributor list comes from a single author fetch, so paging the
+    // article backlog won't add to it — only offer server load-more elsewhere.
     const moreCached = all.length > store.display;
-    const moreServer = scope !== 'pages' && hasMoreArticles();
+    const moreServer = (scope === 'all' || scope === 'articles') && hasMoreArticles();
     if (moreCached || moreServer) results.appendChild(buildLoadMore(all.length));
 
     const first = results.querySelector('.search-result');
@@ -676,7 +691,7 @@
 
     // If we've revealed everything cached and the backlog has more pages,
     // pull the next 100 articles from the server and merge them in.
-    const needServer = scope !== 'pages'
+    const needServer = (scope === 'all' || scope === 'articles')
       && store.display >= store.articles.length
       && hasMoreArticles()
       && !store.loading;
