@@ -21,7 +21,7 @@
 (function () {
   'use strict';
 
-  const CACHE_KEY = 'crop9:';
+  const CACHE_KEY = 'crop10:';
   let picoLoaded = null;       // promise resolving to the loaded pico cascade
   let detectFn = null;          // wrapped pico.run_cascade closure
 
@@ -101,7 +101,7 @@
     try { rgba = ctx.getImageData(0, 0, cw, ch).data; }
     catch (e) {
       // Cross-origin tainted — best we can do is center
-      return 50;
+      return { x: 50, y: 50 };
     }
 
     // Try face detection first
@@ -131,25 +131,43 @@
         const faces = detections.filter(d => d[3] > 1.5);
 
         if (faces.length) {
+          // Rank by area-weighted score so the real subject beats tiny pattern
+          // artifacts (cartoon eyes, background texture).
           faces.sort((a, b) => (b[2] * b[2] * b[3]) - (a[2] * a[2] * a[3]));
-          const [r, c, size, score] = faces[0];
-          // r is the face CENTER row. Pull up 25% of face size so eyes/
-          // forehead are roughly on the rule-of-thirds upper line.
-          const focusY = r - size * 0.25;
-          const yPercent = Math.round((focusY / ch) * 100);
-          console.log('[smart-crop] face: center=' + Math.round(r) + '/' + ch +
-                      ' size=' + Math.round(size) +
-                      ' score=' + score.toFixed(2) +
-                      ' → ' + yPercent + '% (of ' + faces.length + ' candidates)');
-          return Math.max(10, Math.min(85, yPercent));
+          const [, , bsize, bscore] = faces[0];
+
+          // Frame the GROUP: average qualifying faces (those comparable to the
+          // strongest) weighted by size²·score, so a row of people is centered
+          // between them instead of snapping to one face. A lone face collapses
+          // to a single point. This also gives us a horizontal center, not just
+          // vertical — so off-center subjects are actually centered now.
+          let wSum = 0, rSum = 0, cSum = 0, sSum = 0, used = 0;
+          for (const [r, c, size, score] of faces) {
+            if (size < bsize * 0.45 || score < bscore * 0.4) continue;
+            const w = size * size * score;
+            wSum += w; rSum += r * w; cSum += c * w; sSum += size * w; used++;
+          }
+          const cr = wSum ? rSum / wSum : faces[0][0];
+          const cc = wSum ? cSum / wSum : faces[0][1];
+          const cs = wSum ? sSum / wSum : bsize;
+
+          // Pull up ~25% of face height so eyes/forehead land near the upper
+          // rule-of-thirds line; center horizontally on the face(s).
+          const focusY = cr - cs * 0.25;
+          const yPercent = Math.max(10, Math.min(85, Math.round((focusY / ch) * 100)));
+          const xPercent = Math.max(12, Math.min(88, Math.round((cc / cw) * 100)));
+          console.log('[smart-crop] faces=' + faces.length + ' used=' + used +
+                      ' center=(' + Math.round(cc) + ',' + Math.round(cr) + ')/' +
+                      cw + 'x' + ch + ' → ' + xPercent + '% ' + yPercent + '%');
+          return { x: xPercent, y: yPercent };
         }
       } catch (e) {
         console.warn('[smart-crop] pico run failed:', e);
       }
     }
 
-    // No face → subject fallback
-    return detectSubject(rgba, cw, ch);
+    // No face → subject fallback (vertical only; horizontal stays centered)
+    return { x: 50, y: detectSubject(rgba, cw, ch) };
   }
 
   /* -------- public API -------- */
@@ -162,9 +180,10 @@
 
     const run = async () => {
       try {
-        const yPercent = await analyzeImage(img);
-        if (yPercent == null) return;
-        const pos = `50% ${yPercent}%`;
+        const res = await analyzeImage(img);
+        if (res == null) return;
+        // Back-compat: a bare number means "vertical only, center horizontally".
+        const pos = (typeof res === 'number') ? `50% ${res}%` : `${res.x}% ${res.y}%`;
         img.style.objectPosition = pos;
         try { sessionStorage.setItem(CACHE_KEY + img.src, pos); } catch (e) {}
       } catch (e) { /* swallow */ }
