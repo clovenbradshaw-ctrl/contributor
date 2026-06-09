@@ -561,7 +561,7 @@
           <a href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a>
         </div>
       </div>
-      <a href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener" class="btn">Donate</a>
+      <a href="page.html?slug=donate" class="btn">Donate</a>
       <a href="https://thecontributor.org/pay/" target="_blank" rel="noopener" class="btn primary">Buy a Paper</a>
       <button class="search-btn" aria-label="Search" onclick="(function(){var q=prompt('Search The Contributor:');if(q)window.open('https://www.google.com/search?q='+encodeURIComponent(q+' site:thecontributor.org'),'_blank');})()">
         <svg viewBox="0 0 20 20" fill="none" width="20" height="20"><circle cx="9" cy="9" r="6" stroke="currentColor" stroke-width="1.5"/><line x1="13.5" y1="13.5" x2="17.5" y2="17.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
@@ -592,7 +592,7 @@
         <li><a class="drawer-item" href="index.html?tag=vendor-spotlight"><span class="bullet"></span><span class="grow">Vendor Spotlight</span></a></li>
       </ul>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="about">
     <div class="drawer-header">
@@ -610,7 +610,7 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="involved">
     <div class="drawer-header">
@@ -629,7 +629,7 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
 </aside>
 
@@ -718,7 +718,7 @@
     path = path.replace(/^\/+|\/+$/g, '');
     if (!path) return 'index.html';
     const PAGES = {
-      'donate':'donate','pay':'pay',
+      'donate':'donate','get-involved/donate-now':'donate','pay':'pay',
       'our-vendors/find-a-vendor':'find-a-vendor',
       'our-vendors/become-a-vendor':'become-a-vendor',
       'our-story/programs':'programs','our-story/how-it-works':'how-it-works',
@@ -873,20 +873,34 @@
     const slug = params.get('slug') || 'programs'; // sensible default
     const id = params.get('id');
 
-    let url;
-    if (id) {
-      url = `${API}/${encodeURIComponent(id)}`;
-    } else {
-      url = `${API}?slug=${encodeURIComponent(slug)}`;
-    }
+    // Some canonical slugs differ from the live WP page slug. The Donate page,
+    // for example, lives at /get-involved/donate-now/ — so if "donate" yields
+    // nothing, fall back to its known alias before giving up.
+    const SLUG_ALIASES = { 'donate': ['donate-now'] };
 
-    const finalUrl = useProxy ? 'https://corsproxy.io/?' + encodeURIComponent(url) : url;
+    const proxify = (u) => useProxy ? 'https://corsproxy.io/?' + encodeURIComponent(u) : u;
 
     try {
-      const res = await fetch(finalUrl, { headers: { 'Accept': 'application/json' } });
-      if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
-      const data = await res.json();
-      const page = Array.isArray(data) ? data[0] : data;
+      let page = null;
+      if (id) {
+        const res = await fetch(proxify(`${API}/${encodeURIComponent(id)}`), { headers: { 'Accept': 'application/json' } });
+        if (!res.ok) throw new Error('HTTP ' + res.status + ' ' + res.statusText);
+        const data = await res.json();
+        page = Array.isArray(data) ? data[0] : data;
+      } else {
+        const candidates = [slug].concat(SLUG_ALIASES[slug] || []);
+        let lastError = null;
+        for (const s of candidates) {
+          try {
+            const res = await fetch(proxify(`${API}?slug=${encodeURIComponent(s)}`), { headers: { 'Accept': 'application/json' } });
+            if (!res.ok) { lastError = new Error('HTTP ' + res.status + ' ' + res.statusText); continue; }
+            const data = await res.json();
+            const hit = Array.isArray(data) ? data[0] : data;
+            if (hit && hit.id) { page = hit; break; }
+          } catch (e) { lastError = e; }
+        }
+        if (!page && lastError) throw lastError;
+      }
       if (!page || !page.id) throw new Error('Page not found for slug "' + slug + '"');
 
       renderPage(page);
