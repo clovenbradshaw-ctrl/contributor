@@ -981,7 +981,6 @@
     z-index: -1;
   }
   .nav-group[data-open="true"] .nav-dropdown { display: block; }
-  .nav-group[data-open="true"] .nav-dropdown { display: block; }
   .nav-dropdown a {
     display: block;
     padding: 10px 22px;
@@ -1259,9 +1258,10 @@
 
     <div id="grid-1" class="grid"></div>
     <div id="grid-2" class="grid"></div>
+    <div id="grid-more" class="grid"></div>
 
     <div class="see-more-row">
-      <a class="see-more" href="index.html">See More</a>
+      <button type="button" class="see-more" id="see-more-btn">See More</button>
     </div>
   </div>
 </main>
@@ -1319,7 +1319,11 @@
   const API_DIRECT = WP_BASE + '/wp-json/wp/v2/posts';
   const TAGS_API   = WP_BASE + '/wp-json/wp/v2/tags';
   const CATS_API   = WP_BASE + '/wp-json/wp/v2/categories';
-  const QUERY      = '?_embed=true&per_page=14&_fields=id,date,slug,link,title,excerpt,_links,_embedded';
+  const PER_PAGE   = 14;
+  const QUERY      = '?_embed=true&per_page=' + PER_PAGE + '&_fields=id,date,slug,link,title,excerpt,_links,_embedded';
+
+  // Pagination state for the homepage feed (drives the "See More" button).
+  const feedState  = { baseUrl: null, useProxy: false, page: 1, loading: false, exhausted: false };
 
   const $ = id => document.getElementById(id);
 
@@ -1542,6 +1546,11 @@
     posts.slice(2, 5).forEach((p, i) => grid1.appendChild(renderStory(p, i + 2)));
     posts.slice(5, 8).forEach((p, i) => grid2.appendChild(renderStory(p, i + 5)));
 
+    // Any posts beyond the 8 hand-placed slots fill the "load more" grid so the
+    // first page's full payload (per_page) is shown before fetching page 2.
+    const gridMore = $('grid-more'); gridMore.innerHTML = '';
+    posts.slice(8).forEach((p, i) => gridMore.appendChild(renderStory(p, i + 8)));
+
     $('loading').hidden = true;
     $('error').hidden = true;
     $('content').hidden = false;
@@ -1619,8 +1628,16 @@
         const id = await lookupTermId(CATS_API, catSlug, useProxy);
         if (id) url += '&categories=' + id;
       }
+      // Remember the resolved query so "See More" can fetch subsequent pages.
+      feedState.baseUrl = url;
+      feedState.useProxy = useProxy;
+      feedState.page = 1;
+      feedState.exhausted = false;
+
       const posts = await fetchJson(url, useProxy);
       render(posts);
+      // Fewer results than a full page means there's nothing more to load.
+      setSeeMore(posts.length >= PER_PAGE);
       // Highlight active filter pill
       const activeSlug = tagSlug || '';
       document.querySelectorAll('.filters-popover a').forEach(a => {
@@ -1629,6 +1646,48 @@
     } catch (err) {
       console.error('[Contributor reskin]', err);
       showError(err, useProxy === true);
+    }
+  }
+
+  /* ---------- load more (pagination) ---------- */
+  function setSeeMore(visible) {
+    const row = document.querySelector('.see-more-row');
+    const btn = $('see-more-btn');
+    if (!row || !btn) return;
+    row.hidden = !visible;
+    btn.disabled = false;
+    btn.textContent = 'See More';
+  }
+
+  async function loadMore() {
+    const btn = $('see-more-btn');
+    if (!feedState.baseUrl || feedState.loading || feedState.exhausted) return;
+    feedState.loading = true;
+    if (btn) { btn.disabled = true; btn.textContent = 'Loading…'; }
+
+    const nextPage = feedState.page + 1;
+    const url = feedState.baseUrl + '&page=' + nextPage;
+    try {
+      const posts = await fetchJson(url, feedState.useProxy);
+      if (Array.isArray(posts) && posts.length) {
+        const gridMore = $('grid-more');
+        posts.forEach((p, i) => gridMore.appendChild(renderStory(p, 100 + i)));
+        feedState.page = nextPage;
+      }
+      if (!Array.isArray(posts) || posts.length < PER_PAGE) {
+        feedState.exhausted = true;
+        setSeeMore(false);
+      } else if (btn) {
+        btn.disabled = false;
+        btn.textContent = 'See More';
+      }
+    } catch (err) {
+      // WP returns HTTP 400 when paging past the last page — treat as "done".
+      console.warn('[Contributor reskin] load more stopped:', err);
+      feedState.exhausted = true;
+      setSeeMore(false);
+    } finally {
+      feedState.loading = false;
     }
   }
 
@@ -1704,25 +1763,50 @@
   function initNavDropdowns() {
     const groups = document.querySelectorAll('.nav-group');
     if (!groups.length) return;
-    const closeAll = () => groups.forEach(g => {
+    // One shared close-timer so moving the pointer between the trigger and the
+    // 8px gap above the panel doesn't dismiss the menu mid-hover (the old
+    // "intermittent" bug: mouseleave fired before mouseenter on the panel).
+    let hoverTimer = null;
+    const openGroup = (g) => {
+      groups.forEach(other => {
+        if (other === g) return;
+        other.setAttribute('data-open', 'false');
+        const ot = other.querySelector('.nav-trigger');
+        if (ot) ot.setAttribute('aria-expanded', 'false');
+      });
+      g.setAttribute('data-open', 'true');
+      const t = g.querySelector('.nav-trigger');
+      if (t) t.setAttribute('aria-expanded', 'true');
+    };
+    const closeGroup = (g) => {
       g.setAttribute('data-open', 'false');
       const t = g.querySelector('.nav-trigger');
       if (t) t.setAttribute('aria-expanded', 'false');
-    });
+    };
+    const closeAll = () => groups.forEach(closeGroup);
+
     groups.forEach(g => {
       const trigger = g.querySelector('.nav-trigger');
       if (!trigger) return;
-      const toggle = (forceOpen) => {
-        const isOpen = forceOpen !== undefined ? forceOpen : g.getAttribute('data-open') !== 'true';
-        closeAll();
-        if (isOpen) {
-          g.setAttribute('data-open', 'true');
-          trigger.setAttribute('aria-expanded', 'true');
-        }
-      };
-      trigger.addEventListener('click', e => { e.stopPropagation(); toggle(); });
-      g.addEventListener('mouseenter', () => toggle(true));
-      g.addEventListener('mouseleave', () => toggle(false));
+      // Click toggles — works for touch devices and as a keyboard fallback.
+      trigger.addEventListener('click', e => {
+        e.stopPropagation();
+        clearTimeout(hoverTimer);
+        if (g.getAttribute('data-open') === 'true') closeGroup(g);
+        else openGroup(g);
+      });
+      // Hover intent: open immediately, close after a short grace period.
+      g.addEventListener('mouseenter', () => { clearTimeout(hoverTimer); openGroup(g); });
+      g.addEventListener('mouseleave', () => {
+        clearTimeout(hoverTimer);
+        hoverTimer = setTimeout(() => closeGroup(g), 200);
+      });
+      // Keyboard accessibility: open while focus is inside the group, close
+      // when focus moves out (e.g. tabbing past the last dropdown link).
+      g.addEventListener('focusin', () => { clearTimeout(hoverTimer); openGroup(g); });
+      g.addEventListener('focusout', e => {
+        if (!g.contains(e.relatedTarget)) closeGroup(g);
+      });
     });
     document.addEventListener('click', e => {
       if (!e.target.closest('.nav-group')) closeAll();
@@ -1736,6 +1820,8 @@
     initFilters();
     initDrawer();
     initNavDropdowns();
+    const seeMoreBtn = $('see-more-btn');
+    if (seeMoreBtn) seeMoreBtn.addEventListener('click', loadMore);
     load(false);
   });
 })();
