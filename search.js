@@ -191,6 +191,23 @@
       margin-right: 8px;
     }
 
+    .search-loadmore-row {
+      display: flex; justify-content: center;
+      padding: 14px 22px 6px;
+    }
+    .search-loadmore {
+      font-family: var(--font-sans, system-ui), sans-serif;
+      font-size: 13px; font-weight: 700;
+      letter-spacing: .04em;
+      padding: 9px 22px;
+      background: var(--bg, #F5F5F5);
+      border: 1px solid var(--border, #BEBEBE);
+      color: var(--text-body, #484848);
+      cursor: pointer;
+    }
+    .search-loadmore:hover:not(:disabled) { background: var(--ink, #222); color: var(--white, #fff); border-color: var(--ink, #222); }
+    .search-loadmore:disabled { opacity: .6; cursor: default; }
+
     .search-hint {
       padding: 12px 22px;
       font-family: var(--font-sans, system-ui), sans-serif;
@@ -276,6 +293,91 @@
           || media.source_url || null;
     }
     return media.source_url || null;
+  }
+  function getAuthorName(post) {
+    const a = post._embedded && post._embedded.author;
+    return (a && a[0] && a[0].name) || '';
+  }
+
+  /* ---------- backlog coverage ----------
+     WP REST caps per_page at 100. We pull a full page of search hits (so the
+     whole backlog is reachable, not just the first 20) and page through the
+     rest on demand via "Load more". */
+  const POSTS_PER_PAGE = 100;  // server page size for article search
+  const PAGES_PER_PAGE = 100;  // server page size for static-page search
+  const UI_PAGE = 12;          // results revealed per "Load more" click
+
+  async function fetchPostsPage(q, page) {
+    const url = `${API}/posts?search=${encodeURIComponent(q)}`
+      + `&_embed=true&per_page=${POSTS_PER_PAGE}&page=${page}`
+      + `&_fields=id,date,slug,title,excerpt,author,_embedded`;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) return { items: [], totalPages: page };
+      const totalPages = parseInt(res.headers.get('X-WP-TotalPages') || '1', 10) || 1;
+      const items = await res.json();
+      return { items: Array.isArray(items) ? items : [], totalPages };
+    } catch (e) {
+      return { items: [], totalPages: page };
+    }
+  }
+
+  async function fetchPagesAll(q) {
+    const url = `${API}/pages?search=${encodeURIComponent(q)}`
+      + `&per_page=${PAGES_PER_PAGE}&_fields=id,slug,title,excerpt`;
+    try {
+      const res = await fetch(url);
+      if (res.ok) { const j = await res.json(); return Array.isArray(j) ? j : []; }
+    } catch (e) {}
+    return [];
+  }
+
+  /* ---------- author-prioritized search ----------
+     A query that matches a contributor's name should surface everything they
+     wrote — not just posts that happen to mention the name in body text. The
+     public /users endpoint lists authors with published posts, so we resolve
+     matching authors and pull their articles, then rank them to the top. */
+  async function fetchAuthorPosts(q) {
+    let users = [];
+    try {
+      const ures = await fetch(`${API}/users?search=${encodeURIComponent(q)}&per_page=10&_fields=id,name,slug`);
+      if (ures.ok) { const j = await ures.json(); users = Array.isArray(j) ? j : []; }
+    } catch (e) {}
+    if (!users.length) return { items: [], names: [] };
+
+    // Prefer close name matches; fall back to whatever the server returned.
+    const close = users.filter(u => fuzzyScore(q, u.name || '') > 0);
+    const use = (close.length ? close : users).slice(0, 5);
+    const ids = use.map(u => u.id).filter(Boolean);
+    if (!ids.length) return { items: [], names: [] };
+
+    let items = [];
+    try {
+      const pres = await fetch(`${API}/posts?author=${ids.join(',')}`
+        + `&_embed=true&per_page=100&orderby=date&order=desc`
+        + `&_fields=id,date,slug,title,excerpt,author,_embedded`);
+      if (pres.ok) { const j = await pres.json(); items = Array.isArray(j) ? j : []; }
+    } catch (e) {}
+    return { items, names: use.map(u => u.name) };
+  }
+
+  /* ---------- scoring ---------- */
+  function scoreArticle(q, item, authorMatch) {
+    const titleText  = decode((item.title && item.title.rendered) || '');
+    const exText     = strip((item.excerpt && item.excerpt.rendered) || '');
+    const authorName = getAuthorName(item);
+    const titleScore   = fuzzyScore(q, titleText) * 3;     // title weighted heavily
+    const excerptScore = fuzzyScore(q, exText);
+    const authorScore  = fuzzyScore(q, authorName) * 2;    // name match is a strong signal
+    let score = titleScore + excerptScore + authorScore;
+    if (authorMatch) score += 200;                          // by this author → top of the list
+    return { item, titleText, exText, authorName, score, kind: 'article' };
+  }
+  function scorePage(q, item) {
+    const titleText = decode((item.title && item.title.rendered) || '');
+    const exText    = strip((item.excerpt && item.excerpt.rendered) || '');
+    const score = fuzzyScore(q, titleText) * 3 + fuzzyScore(q, exText);
+    return { item, titleText, exText, score, kind: 'page' };
   }
 
   /* ---------- fuzzy matching ---------- */
@@ -372,7 +474,18 @@
 
   /* ---------- modal lifecycle ---------- */
   let modal, input, results, tabsEl, lastQuery = '', scope = 'all', cursor = -1;
-  let currentResults = { articles: [], pages: [] };
+  function freshStore(q) {
+    return {
+      q,
+      articles: [], pages: [],
+      articleSeen: new Set(),
+      articlePage: 1, articleTotalPages: 1,
+      authorNames: [],
+      display: UI_PAGE,
+      loading: false,
+    };
+  }
+  let store = freshStore('');
 
   function mount() {
     if (modal) return;
@@ -452,7 +565,7 @@
     cursor = -1;
 
     if (!q) {
-      currentResults = { articles: [], pages: [] };
+      store = freshStore('');
       results.innerHTML = '<div class="search-empty">Start typing to search articles &amp; pages</div>';
       updateCounts();
       return;
@@ -463,49 +576,60 @@
     }
     results.innerHTML = '<div class="search-loading">Searching…</div>';
 
-    // Fetch from two sources in parallel. Pull more than we'll show so fuzzy
-    // re-ranking has material to work with.
-    const articlesUrl = `${API}/posts?search=${encodeURIComponent(q)}&_embed=true&per_page=20&_fields=id,date,slug,title,excerpt,_embedded`;
-    const pagesUrl    = `${API}/pages?search=${encodeURIComponent(q)}&per_page=15&_fields=id,slug,title,excerpt`;
-
-    const settled = await Promise.allSettled([
-      fetch(articlesUrl).then(r => r.ok ? r.json() : []),
-      fetch(pagesUrl).then(r => r.ok ? r.json() : [])
+    // Three sources in parallel: authors (name → their posts), the first full
+    // page of content-search hits, and static pages.
+    const [authorRes, postsRes, pagesRes] = await Promise.all([
+      fetchAuthorPosts(q),
+      fetchPostsPage(q, 1),
+      fetchPagesAll(q),
     ]);
-    if (lastQuery !== q) return; // stale
+    if (lastQuery !== q) return; // a newer query superseded this one
 
-    const articles = settled[0].status === 'fulfilled' ? (settled[0].value || []) : [];
-    const pages    = settled[1].status === 'fulfilled' ? (settled[1].value || []) : [];
+    const next = freshStore(q);
+    next.articleTotalPages = postsRes.totalPages;
+    next.articlePage = 1;
+    next.authorNames = authorRes.names;
 
-    // Score + sort
-    const scored = (items, getText, kind) => items
-      .map(item => {
-        const titleText = decode((item.title && item.title.rendered) || '');
-        const exText    = strip((item.excerpt && item.excerpt.rendered) || '');
-        const titleScore   = fuzzyScore(q, titleText) * 3;       // title matches weighted heavily
-        const excerptScore = fuzzyScore(q, exText);
-        const totalScore = titleScore + excerptScore;
-        return { item, titleText, exText, score: totalScore, kind };
-      })
-      .filter(r => r.score > 0 || items.length < 4)              // keep server-trusted results if fuzzy fails
-      .sort((a, b) => b.score - a.score);
+    // Author-authored posts first (boosted), then content-search hits.
+    // WP already filtered to relevant posts, so we keep every result (even a
+    // body-only match that scores 0 on title/excerpt) and rank by score.
+    const seen = next.articleSeen;
+    authorRes.items.forEach(it => {
+      if (it && !seen.has(it.id)) { seen.add(it.id); next.articles.push(scoreArticle(q, it, true)); }
+    });
+    postsRes.items.forEach(it => {
+      if (it && !seen.has(it.id)) { seen.add(it.id); next.articles.push(scoreArticle(q, it, false)); }
+    });
+    next.articles.sort((a, b) => b.score - a.score);
+    next.pages = pagesRes.map(it => scorePage(q, it)).sort((a, b) => b.score - a.score);
 
-    currentResults = {
-      articles: scored(articles, p => decode(p.title.rendered), 'article'),
-      pages: scored(pages, p => decode(p.title.rendered), 'page'),
-    };
+    store = next;
     paint();
   }
 
+  function hasMoreArticles() {
+    return store.articlePage < store.articleTotalPages;
+  }
+
   function updateCounts() {
-    const counts = { all: currentResults.articles.length + currentResults.pages.length,
-                     articles: currentResults.articles.length,
-                     pages: currentResults.pages.length };
+    const aMore = hasMoreArticles() ? '+' : '';
+    const counts = {
+      all:      { n: store.articles.length + store.pages.length, suffix: aMore },
+      articles: { n: store.articles.length, suffix: aMore },
+      pages:    { n: store.pages.length, suffix: '' },
+    };
     tabsEl.forEach(t => {
       const s = t.getAttribute('data-scope');
       const span = t.querySelector('.count');
-      span.textContent = counts[s] > 0 ? counts[s] : '';
+      const c = counts[s];
+      span.textContent = c && c.n > 0 ? (c.n + c.suffix) : '';
     });
+  }
+
+  function pool() {
+    if (scope === 'all') return [...store.articles, ...store.pages].sort((a, b) => b.score - a.score);
+    if (scope === 'articles') return store.articles.slice();
+    return store.pages.slice();
   }
 
   function paint() {
@@ -515,31 +639,70 @@
       results.innerHTML = '<div class="search-empty">Start typing to search articles &amp; pages</div>';
       return;
     }
-    let toShow = [];
-    if (scope === 'all') {
-      // Interleave: take top of each, weighted by score
-      toShow = [...currentResults.articles, ...currentResults.pages]
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 12);
-    } else if (scope === 'articles') {
-      toShow = currentResults.articles.slice(0, 15);
-    } else {
-      toShow = currentResults.pages.slice(0, 15);
-    }
-
-    if (!toShow.length) {
+    const all = pool();
+    if (!all.length) {
       results.innerHTML = `<div class="search-noresults">No matches for &ldquo;<strong>${escapeHTML(q)}</strong>&rdquo;.<br>Try a shorter query or check spelling.</div>`;
       return;
     }
     results.innerHTML = '';
-    toShow.forEach(r => results.appendChild(buildResult(r, q)));
-    // Auto-select first
+    all.slice(0, store.display).forEach(r => results.appendChild(buildResult(r, q)));
+
+    // Offer "Load more" when there are more cached results to reveal, or more
+    // server pages of articles to fetch (the backlog beyond the first 100).
+    const moreCached = all.length > store.display;
+    const moreServer = scope !== 'pages' && hasMoreArticles();
+    if (moreCached || moreServer) results.appendChild(buildLoadMore(all.length));
+
     const first = results.querySelector('.search-result');
-    if (first) { first.classList.add('is-active'); cursor = 0; }
+    if (first && cursor < 0) { first.classList.add('is-active'); cursor = 0; }
+  }
+
+  function buildLoadMore(totalCached) {
+    const wrap = document.createElement('div');
+    wrap.className = 'search-loadmore-row';
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'search-loadmore';
+    b.disabled = store.loading;
+    b.textContent = store.loading ? 'Loading…' : 'Load more results';
+    b.addEventListener('click', loadMoreResults);
+    wrap.appendChild(b);
+    return wrap;
+  }
+
+  async function loadMoreResults() {
+    const q = lastQuery;
+    store.display += UI_PAGE;
+
+    // If we've revealed everything cached and the backlog has more pages,
+    // pull the next 100 articles from the server and merge them in.
+    const needServer = scope !== 'pages'
+      && store.display >= store.articles.length
+      && hasMoreArticles()
+      && !store.loading;
+
+    if (needServer) {
+      store.loading = true;
+      paint(); // reflect the "Loading…" button state
+      const nextPage = store.articlePage + 1;
+      const res = await fetchPostsPage(q, nextPage);
+      if (q !== lastQuery) return; // query changed mid-fetch
+      store.articlePage = nextPage;
+      store.articleTotalPages = res.totalPages;
+      res.items.forEach(it => {
+        if (it && !store.articleSeen.has(it.id)) {
+          store.articleSeen.add(it.id);
+          store.articles.push(scoreArticle(q, it, false));
+        }
+      });
+      store.articles.sort((a, b) => b.score - a.score);
+      store.loading = false;
+    }
+    paint();
   }
 
   function buildResult(scored, q) {
-    const { item, titleText, exText, kind } = scored;
+    const { item, titleText, exText, authorName, kind } = scored;
     const a = document.createElement('a');
     a.className = 'search-result';
 
@@ -552,7 +715,8 @@
       thumbHTML = thumb
         ? `<img class="thumb" src="${thumb}" alt="" loading="lazy" />`
         : `<span class="thumb placeholder">C</span>`;
-      meta = fmtDate(item.date);
+      const date = fmtDate(item.date);
+      meta = authorName ? (authorName + (date ? ' · ' + date : '')) : date;
     } else {
       href = 'page.html?slug=' + encodeURIComponent(item.slug);
       kindLabel = 'Page';

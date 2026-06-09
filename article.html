@@ -647,7 +647,7 @@
           <a href="page.html?slug=unseen-nashville-tours">Unseen Nashville Tours</a>
         </div>
       </div>
-      <a href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener" class="btn">Donate</a>
+      <a href="page.html?slug=donate" class="btn">Donate</a>
       <a href="https://thecontributor.org/pay/" target="_blank" rel="noopener" class="btn primary">Buy a Paper</a>
       <button class="search-btn" aria-label="Search" onclick="(function(){var q=prompt('Search The Contributor:');if(q)window.open('https://www.google.com/search?q='+encodeURIComponent(q+' site:thecontributor.org'),'_blank');})()">
         <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" width="20" height="20">
@@ -697,7 +697,7 @@
         <li><a class="drawer-item" href="index.html?tag=vendor-spotlight"><span class="bullet"></span><span class="grow">Vendor Spotlight</span></a></li>
       </ul>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="about">
     <div class="drawer-header">
@@ -719,7 +719,7 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
   <div class="drawer-pane" data-pane="involved">
     <div class="drawer-header">
@@ -742,7 +742,7 @@
         </ul>
       </div>
     </div>
-    <div class="drawer-footer"><a class="drawer-donate" href="https://thecontributor.org/get-involved/donate-now/" target="_blank" rel="noopener">Donate</a></div>
+    <div class="drawer-footer"><a class="drawer-donate" href="page.html?slug=donate">Donate</a></div>
   </div>
 </aside>
 
@@ -891,7 +891,7 @@
     path = path.replace(/^\/+|\/+$/g, '');
     if (!path) return 'index.html';
     const PAGES = {
-      'donate':'donate','pay':'pay',
+      'donate':'donate','get-involved/donate-now':'donate','pay':'pay',
       'our-vendors/find-a-vendor':'find-a-vendor',
       'our-vendors/become-a-vendor':'become-a-vendor',
       'our-story/programs':'programs','our-story/how-it-works':'how-it-works',
