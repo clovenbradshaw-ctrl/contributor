@@ -197,7 +197,7 @@
     // Crop story cards, hero feature, and article images. Second-feature
     // (#feature-slot) images use object-fit:contain — not cropped — so they're
     // intentionally excluded here.
-    (root || document).querySelectorAll('#hero-slot .feature .img, article.story img, .article-prose img, .featured img').forEach(apply);
+    (root || document).querySelectorAll('#hero-slot .feature .img, article.story img, .article-prose img, .featured img, .related-thumb img, .team-photo img, .mm-media img').forEach(apply);
   }
 
   function watch(root) {

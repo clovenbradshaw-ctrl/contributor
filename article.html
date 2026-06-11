@@ -50,8 +50,8 @@
     --border:       var(--charcoal-200);
 
     --container:    1282px;
-    --hero-col:     837px;   /* featured image width */
-    --body-col:     621px;   /* reading column width */}
+    --hero-col:     960px;   /* featured image width */
+    --body-col:     700px;   /* reading column width */}
 
   /* =========================================================================
      TYPE SYSTEM v1
@@ -119,18 +119,18 @@
   }
   .wordmark img {
     display: block;
-    height: 56px;
+    height: 60px;
     width: auto;
-    max-width: 280px;
+    max-width: 300px;
     object-fit: contain;
   }
-  nav.top-nav { display: flex; align-items: center; gap: 4px; }
+  nav.top-nav { display: flex; align-items: center; gap: 12px; }
   nav.top-nav .item {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 10px 18px; font-size: 16px; font-weight: 500; color: var(--ink); cursor: pointer;
   }
   nav.top-nav .caret { width: 10px; height: 10px; }
-  nav.top-nav .btn { padding: 8px 22px; font-family: var(--font-sans); font-size: 16px; font-weight: 700; line-height: 1.5; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; margin-left: 8px; white-space: nowrap; }
+  nav.top-nav .btn { padding: 8px 22px; font-family: var(--font-sans); font-size: 18px; font-weight: 700; line-height: 1.5; border: 1px solid var(--ink); background: var(--white); color: var(--ink); cursor: pointer; margin-left: 8px; white-space: nowrap; }
   nav.top-nav .btn:hover { background: var(--ink); color: var(--white); }
   nav.top-nav .btn.primary { background: var(--yellow); border-color: var(--yellow); }
   nav.top-nav .btn.primary:hover { background: var(--ink); color: var(--white); border-color: var(--ink); }
@@ -253,8 +253,8 @@
   .article-header h1 {
     font-family: var(--font-sans);
     font-weight: 700;
-    font-size: 40px;
-    line-height: 1.3;
+    font-size: 46px;
+    line-height: 1.25;
     letter-spacing: 0;
     margin: 0 0 18px;
     color: var(--ink);
@@ -297,8 +297,8 @@
   .article-prose {
     font-family: var(--font-serif);
     font-weight: 400;
-    font-size: 20px;
-    line-height: 1.6;
+    font-size: 21px;
+    line-height: 1.75;
     color: var(--ink);
     margin-top: 20px;
     overflow-wrap: break-word;
@@ -429,12 +429,12 @@
     display: inline-flex; align-items: center; gap: 10px;
     text-decoration: underline; text-underline-offset: 3px;
   }
-  .next-article:hover { color: var(--ink); }
+  .next-article:hover { color: var(--blue-light); }
 
   /* Related articles */
   .related-divider {
     border: 0;
-    border-top: 1px solid var(--ink);
+    border-top: 1px solid var(--charcoal-200);
     margin: 28px 0 32px;
   }
   .related-heading {
@@ -447,10 +447,39 @@
   .related-card {
     background: var(--white);
     border: 1px solid var(--ink);
-    padding: 22px 28px;
-    margin-bottom: 16px;
-    display: block;
+    padding: 20px 24px;
+    margin-bottom: 22px;
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    box-shadow: 6px 6px 6px 0 rgba(0,0,0,0.15);
+    transition: transform .18s ease, box-shadow .18s ease;
   }
+  .related-card:hover {
+    transform: translate(-3px, -3px);
+    box-shadow: 9px 9px 0 0 var(--ink);
+  }
+  .related-thumb {
+    flex: 0 0 200px;
+    height: 150px;
+    overflow: hidden;
+    background: var(--yellow);
+  }
+  .related-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: 50% 50%;
+    display: block;
+    transition: object-position .3s ease;
+  }
+  .related-thumb .ph {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .related-thumb .ph img {
+    width: 46%; height: 46%;
+    object-fit: contain;
+  }
+  .related-body { flex: 1; min-width: 0; }
   .related-card:hover h3 { color: var(--blue); }
   .related-card .section-label {
     margin-bottom: 12px;
@@ -460,9 +489,13 @@
     font-family: var(--font-sans);
     font-weight: 700;
     font-size: 22px;
-    line-height: 1.2;
+    line-height: 1.25;
     margin: 0 0 12px;
     color: var(--ink);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
   .related-card .byline { font-size: 14px; }
 
@@ -495,7 +528,7 @@
   footer.site .socials svg { width: 16px; height: 16px; }
   footer.site .colophon {
     font-family: var(--font-sans); font-size: 13px; color: var(--text-muted);
-    border-top: 1px solid rgba(255,255,255,.12); padding-top: 24px; text-align: center;
+    padding-top: 40px; text-align: left;
   }
   @media (max-width: 880px) { footer.site .cols { grid-template-columns: 1fr; gap: 36px; } }
 
@@ -560,7 +593,8 @@
 
     .featured { margin: 28px auto 12px; }
 
-    .related-card { padding: 20px 22px; }
+    .related-card { padding: 14px 16px; gap: 16px; }
+    .related-thumb { flex: 0 0 96px; height: 84px; }
     .related-card h3 { font-size: 18px; }
 
     .article-actions { margin: 36px auto 24px; }
@@ -585,7 +619,7 @@
   .nav-trigger[aria-expanded="true"] .caret { transform: rotate(180deg); }
   .nav-dropdown {
     position: absolute;
-    top: calc(100% + 4px);
+    top: 100%;
     left: 0;
     min-width: 240px;
     background: var(--white);
@@ -600,15 +634,25 @@
     display: block;
     padding: 10px 22px;
     font-family: var(--font-sans);
-    font-size: 15px; font-weight: 500;
+    font-size: 16px; font-weight: 500;
     color: var(--ink);
     white-space: nowrap;
   }
-  .nav-dropdown a:hover { background: var(--bg); color: var(--blue); }
+  .nav-dropdown a:hover { background: var(--bg); color: var(--blue); text-decoration: underline; text-underline-offset: 3px; }
   @media (max-width: 720px) {
     .nav-group { display: none; }
   }
 
+
+  /* Footer layout — matches design: logo | mission/vision | stacked contact */
+  footer.site .cols { grid-template-columns: auto 1.6fr 1fr; gap: 64px; align-items: stretch; }
+  footer.site .foot-mission { display: flex; flex-direction: column; }
+  footer.site .foot-mission .colophon { margin-top: auto; padding-top: 56px; text-align: left; border: 0; }
+  footer.site .foot-contact h5:first-child { margin-top: 0; }
+  @media (max-width: 880px) {
+    footer.site .cols { grid-template-columns: 1fr; gap: 32px; }
+    footer.site .foot-mission .colophon { margin-top: 28px; padding-top: 0; }
+  }
 </style>
 </head>
 <body>
@@ -629,7 +673,7 @@
         <div class="nav-dropdown">
           <a href="page.html?slug=programs">Programs</a>
           <a href="page.html?slug=how-it-works">How it Works</a>
-          <a href="page.html?slug=meet-us">Our Team &amp; Values</a>
+          <a href="team.html">Our Team &amp; Values</a>
           <a href="page.html?slug=where-to-turn-in-nashville">Where to Turn in Nashville</a>
         </div>
       </div>
@@ -714,7 +758,7 @@
         <ul>
           <li><a class="drawer-item sub" href="page.html?slug=programs">Programs</a></li>
           <li><a class="drawer-item sub" href="page.html?slug=how-it-works">How it Works</a></li>
-          <li><a class="drawer-item sub" href="page.html?slug=meet-us">Our Team &amp; Values</a></li>
+          <li><a class="drawer-item sub" href="team.html">Our Team &amp; Values</a></li>
           <li><a class="drawer-item sub" href="page.html?slug=where-to-turn-in-nashville">Where to Turn in Nashville</a></li>
         </ul>
       </div>
@@ -837,26 +881,22 @@
 <footer class="site">
   <div class="wrap">
     <div class="cols">
-      <div>
+      <div class="foot-brand">
         <span class="wordmark"><img src="https://storage.googleapis.com/intelechia-content/TheContributor_logo_ko.png" alt="The Contributor" /></span>
+      </div>
+      <div class="foot-mission">
         <h5>Our Mission</h5>
         <p class="mission">Empowering our homeless neighbors to achieve income, dignity, housing and community.</p>
         <h5>Our Vision</h5>
         <p class="mission">Bringing the community together to make homelessness a brief, rare occurrence.</p>
+        <div class="colophon">&copy; Copyright 2026, The Contributor</div>
       </div>
-      <div>
+      <div class="foot-contact">
         <h5>Mailing Address</h5>
         <address>The Contributor<br>P.O. Box 332023<br>Nashville, TN 37203</address>
-      </div>
-      <div>
-        <h5>Vendor Sales Office</h5>
-        <address>
-          154 Rep. John Lewis Way N.<br>
-          Nashville, TN 37216<br>
-          <a href="mailto:info@thecontributor.org">info@thecontributor.org</a><br>
-          (615) 829-6829
-        </address>
-        <h5 style="margin-top:24px">Follow Us</h5>
+        <h5 style="margin-top:28px">Vendor Sales Office</h5>
+        <address>154 Rep. John Lewis Way N.<br>Nashville, TN 37216<br><a href="mailto:info@thecontributor.org">info@thecontributor.org</a><br>(615) 829-6829</address>
+        <h5 style="margin-top:28px">Follow Us</h5>
         <div class="socials">
           <a href="https://www.facebook.com/ContributorNashville/" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 22v-8h3l1-4h-4V7c0-1 .5-2 2-2h2V1h-3c-3 0-5 2-5 5v4H6v4h3v8h4z"/></svg></a>
           <a href="https://x.com/TheContributor" target="_blank" rel="noopener" aria-label="Twitter"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 6c-.5.7-1 1-1.5 1.5.5 7-5 12-12 12-2 0-4-.5-5.5-1.5 2 .5 5 0 6.5-1-2 0-3.5-1.5-4-3 .5 0 1 0 2-.5-2 0-4-2-4-4 1 .5 1 .5 2 .5C1 9 1 6 2 4c2 3 5.5 5 9 5-.5-3 2-5 4.5-5 1 0 2 .5 3 1 1-.5 2-.5 3-1-.5 1-1 2-2 2.5.5 0 1.5-.5 2-1z"/></svg></a>
@@ -865,7 +905,6 @@
         </div>
       </div>
     </div>
-    <div class="colophon">© Copyright 2026, The Contributor</div>
   </div>
 </footer>
 
@@ -993,9 +1032,9 @@
       row.appendChild(a);
     });
 
-    // Print is outlined per the design
+    // Print button — solid yellow like the share buttons
     const p = document.createElement('button');
-    p.className = 'share-btn outlined';
+    p.className = 'share-btn';
     p.setAttribute('aria-label', 'Print');
     p.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="3" width="12" height="6"/><rect x="3" y="9" width="18" height="9" rx="1"/><rect x="6" y="15" width="12" height="6"/></svg>';
     p.addEventListener('click', () => window.print());
@@ -1111,10 +1150,16 @@
       const card = document.createElement('a');
       card.className = 'related-card';
       card.href = 'article.html?slug=' + encodeURIComponent(p.slug);
-      card.innerHTML = `
-        <span class="section-label">${(cat.name || '').toUpperCase()}</span>
-        <h3>${decode(p.title.rendered)}</h3>
-        <div class="byline">By <a href="${getAuthorLink(p)}">${getAuthor(p)}</a><span class="sep">|</span>${fmtDate(p.date)}</div>
+      const thumbSrc = getImage(p);
+      const thumb = thumbSrc
+        ? `<div class="related-thumb"><img crossorigin="anonymous" src="${thumbSrc}" alt=""></div>`
+        : `<div class="related-thumb"><div class="ph"><img src="https://storage.googleapis.com/intelechia-content/Contributor%20C%20logo.png" alt=""></div></div>`;
+      card.innerHTML = thumb + `
+        <div class="related-body">
+          <span class="section-label">${(cat.name || '').toUpperCase()}</span>
+          <h3>${decode(p.title.rendered)}</h3>
+          <div class="byline">By <a href="${getAuthorLink(p)}">${getAuthor(p)}</a><span class="sep">|</span>${fmtDate(p.date)}</div>
+        </div>
       `;
       wrap.appendChild(card);
     });

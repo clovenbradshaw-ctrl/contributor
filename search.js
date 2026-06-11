@@ -137,25 +137,21 @@
       border-left-color: var(--yellow, #FFC525);
     }
     .search-result .thumb {
-      width: 64px; height: 64px;
-      flex: 0 0 64px;
+      width: 116px; height: 78px;
+      flex: 0 0 116px;
       background: var(--yellow, #FFC525);
       object-fit: cover;
       object-position: 50% 30%;
       display: block;
     }
     .search-result .thumb.placeholder {
-      display: flex; align-items: center; justify-content: center;
-      color: var(--yellow-soft, #FFDD72);
-      font-family: var(--font-serif, Georgia), serif;
-      font-style: italic;
-      font-weight: 700;
-      font-size: 32px;
-      line-height: 1;
+      background: var(--yellow, #FFC525) url("https://storage.googleapis.com/intelechia-content/Contributor%20C%20logo.png") center / 44% no-repeat;
+      font-size: 0;
     }
     .search-result .thumb.page {
-      background: var(--ink, #222);
-      color: var(--yellow, #FFC525);
+      background: var(--ink, #222) url("https://storage.googleapis.com/intelechia-content/Contributor%20C%20logo.png") center / 40% no-repeat;
+      filter: none;
+      opacity: .92;
     }
     .search-result .body { min-width: 0; flex: 1; }
     .search-result .title {
