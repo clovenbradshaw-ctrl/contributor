@@ -85,6 +85,10 @@
 
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  /* Always reserve the scrollbar gutter so centred content (and the nav) does
+     not shift horizontally between long pages and short filtered views. */
+  html { overflow-y: scroll; }
+  body { overflow-x: hidden; }
 
   body {
     background: var(--bg);
@@ -242,12 +246,14 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: .04em;
-    color: var(--blue-light);
+    /* Match the card section labels: charcoal by default, blue + underline on
+       hover/active. */
+    color: var(--text-body);
     text-decoration: none;
     text-underline-offset: 4px;
     transition: color .15s;
   }
-  .filters-popover a.active { color: var(--blue); }
+  .filters-popover a.active { color: var(--blue); text-decoration: underline; }
   .filters-popover a:hover { color: var(--blue); text-decoration: underline; }
 
   /* =========================================================================
@@ -309,9 +315,11 @@
     flex: 1;
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    object-position: center;
+    /* Crop-to-fill both feature images (smart-crop keeps faces centred). */
+    object-fit: cover;
+    object-position: 50% 50%;
     display: block;
+    transition: object-position .3s ease;
   }
   /* Top hero feature: wider image column with crop-to-fill + smart cropping */
   #hero-slot .feature {
@@ -335,13 +343,18 @@
     text-align: right;
   }
   @media (max-width: 880px) {
-    .feature {
+    .feature,
+    /* #hero-slot .feature carries a higher specificity than `.feature`, so it
+       must be overridden explicitly or its fixed 720px image column overflows
+       the viewport on mobile (the root cause of the broken mobile layout). */
+    #hero-slot .feature {
       grid-template-columns: 1fr;
       min-height: 0;
       padding: 24px 24px;
       gap: 24px;
     }
     .feature .img-frame { border-left: 0; aspect-ratio: 4/3; }
+    #hero-slot .feature .img-frame { aspect-ratio: 4/3; }
   }
 
   .section-label {
@@ -1015,8 +1028,13 @@
   footer.site .foot-mission .colophon { margin-top: auto; padding-top: 56px; text-align: left; border: 0; }
   footer.site .foot-contact h5:first-child { margin-top: 0; }
   @media (max-width: 880px) {
-    footer.site .cols { grid-template-columns: 1fr; gap: 32px; }
+    footer.site .cols { grid-template-columns: 1fr; gap: 0; }
     footer.site .foot-mission .colophon { margin-top: 28px; padding-top: 0; }
+    /* Stacked on mobile, each footer block sits under a hairline rule so the
+       sections read as distinct (kept left-aligned, per the mobile design). */
+    footer.site .cols > div { padding: 28px 0; }
+    footer.site .cols > div:first-child { padding-top: 8px; }
+    footer.site .cols > div + div { border-top: 1px solid rgba(255,255,255,.16); }
   }
 </style>
 </head>
@@ -1215,8 +1233,10 @@
       Become a Vendor
     </a>
     <a href="index.html?tag=vendor-spotlight">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 3l1.8 4.2L18 8l-3 3.4.7 4.6L12 14l-3.7 2 .7-4.6L6 8l4.2-.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3"/>
+        <rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3" transform="rotate(45 12 12)"/>
+        <path d="M12.00,8.50 12.85,10.83 15.33,10.92 13.38,12.45 14.06,14.83 12.00,13.45 9.94,14.83 10.62,12.45 8.67,10.92 11.15,10.83Z" fill="currentColor" stroke="none"/>
       </svg>
       Vendor Spotlight
     </a>
@@ -1542,27 +1562,51 @@
       throw new Error('API returned no posts');
     }
 
-    $('hero-slot').innerHTML = '';
-    $('hero-slot').appendChild(renderFeature(posts[0], 0, {
-      labelStyle: 'gray'
-    }));
+    const params = new URLSearchParams(location.search);
+    const isFiltered = !!(params.get('tag') || params.get('category') || params.get('author'));
 
-    $('feature-slot').innerHTML = '';
-    if (posts[1]) {
-      $('feature-slot').appendChild(renderFeature(posts[1], 1, {
-        labelStyle: 'blue'
-      }));
-    }
-
+    const heroSlot = $('hero-slot');
+    const featureSlot = $('feature-slot');
+    const cta = document.querySelector('.yellow-cta');
     const grid1 = $('grid-1'); grid1.innerHTML = '';
     const grid2 = $('grid-2'); grid2.innerHTML = '';
-    posts.slice(2, 5).forEach((p, i) => grid1.appendChild(renderStory(p, i + 2)));
-    posts.slice(5, 8).forEach((p, i) => grid2.appendChild(renderStory(p, i + 5)));
-
-    // Any posts beyond the 8 hand-placed slots fill the "load more" grid so the
-    // first page's full payload (per_page) is shown before fetching page 2.
     const gridMore = $('grid-more'); gridMore.innerHTML = '';
-    posts.slice(8).forEach((p, i) => gridMore.appendChild(renderStory(p, i + 8)));
+    heroSlot.innerHTML = '';
+    featureSlot.innerHTML = '';
+
+    if (isFiltered) {
+      // Filtered archive view (Vendor Spotlight, a contributor's byline, a
+      // category): a clean, uniform 3-up grid — no headline hero, no second
+      // feature, and no "Looking for a Paper?" promo.
+      heroSlot.hidden = true;
+      featureSlot.hidden = true;
+      if (cta) cta.hidden = true;
+      posts.forEach((p, i) => grid1.appendChild(renderStory(p, i)));
+    } else {
+      heroSlot.hidden = false;
+      featureSlot.hidden = false;
+      if (cta) cta.hidden = false;
+
+      // Headline hero shows the most recent post that actually has a hero image,
+      // so the lead slot is always a framed photo, never a bare placeholder.
+      const heroIdx = posts.findIndex(p => getImage(p));
+      const ordered = heroIdx > 0
+        ? [posts[heroIdx]].concat(posts.slice(0, heroIdx), posts.slice(heroIdx + 1))
+        : posts;
+
+      heroSlot.appendChild(renderFeature(ordered[0], 0, { labelStyle: 'gray' }));
+      if (ordered[1]) {
+        featureSlot.appendChild(renderFeature(ordered[1], 1, { labelStyle: 'blue' }));
+      }
+      ordered.slice(2, 5).forEach((p, i) => grid1.appendChild(renderStory(p, i + 2)));
+      ordered.slice(5, 8).forEach((p, i) => grid2.appendChild(renderStory(p, i + 5)));
+      // Posts beyond the 8 hand-placed slots fill the "load more" grid so the
+      // first page's full payload is shown before fetching page 2.
+      ordered.slice(8).forEach((p, i) => gridMore.appendChild(renderStory(p, i + 8)));
+    }
+
+    // Collapse any grid with no cards so empty rows don't leave a gap.
+    [grid1, grid2, gridMore].forEach(g => { g.hidden = g.children.length === 0; });
 
     $('loading').hidden = true;
     $('error').hidden = true;
@@ -1699,6 +1743,7 @@
       const renderCount = exhaustedNow ? buf.length : Math.floor(buf.length / 3) * 3;
       if (renderCount > 0) {
         const gridMore = $('grid-more');
+        gridMore.hidden = false;
         buf.slice(0, renderCount).forEach(p => gridMore.appendChild(renderStory(p, 100 + (feedState.moreCount++))));
         feedState.buffer = buf.slice(renderCount);
       }
@@ -1723,17 +1768,23 @@
   function initFilters() {
     const btn = $('filters-btn');
     const pop = $('filters-popover');
+    const close = () => {
+      pop.setAttribute('data-open', 'false');
+      btn.setAttribute('aria-expanded', 'false');
+    };
     btn.addEventListener('click', (e) => {
       const open = pop.getAttribute('data-open') === 'true';
       pop.setAttribute('data-open', open ? 'false' : 'true');
       btn.setAttribute('aria-expanded', open ? 'false' : 'true');
       e.stopPropagation();
     });
+    // Close when clicking anywhere outside the trigger or the popover.
     document.addEventListener('click', (e) => {
-      if (!pop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) {
-        pop.setAttribute('data-open', 'false');
-        btn.setAttribute('aria-expanded', 'false');
-      }
+      if (!pop.contains(e.target) && e.target !== btn && !btn.contains(e.target)) close();
+    });
+    // Close on Escape.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && pop.getAttribute('data-open') === 'true') close();
     });
   }
 
