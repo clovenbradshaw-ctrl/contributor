@@ -333,6 +333,12 @@
     object-position: 50% 50%;
     transition: object-position .3s ease;
   }
+  /* Cover-story front-page scans: keep the crop centred (and never moved by
+     smart-crop) so "The Contributor" masthead stays clipped out of frame. */
+  .img-frame .is-cover {
+    object-fit: cover !important;
+    object-position: 50% 50% !important;
+  }
   .feature .img-frame figcaption {
     font-family: var(--font-serif);
     font-style: italic;
@@ -1472,17 +1478,36 @@
     return localize((tag && tag.link) || '#');
   }
 
-  /* ---------- placeholder (matches Figma — 3 brand variants, deterministic by slug) ---------- */
+  /* ---------- content-type icon ----------
+     Maps a post to one of the brand icons by its content type:
+       Vendor Writing                → pencil
+       Q&A / interview / spotlight    → conversation bubble
+       everything else (News, etc.)   → blackletter C  */
+  function iconForPost(post) {
+    const terms = [].concat(...((post._embedded && post._embedded['wp:term']) || []));
+    const slugs = terms.map(t => (t && t.slug) || '').join(' ');
+    const names = terms.map(t => (t && t.name) || '').join(' ').toLowerCase();
+    const title = decode((post.title && post.title.rendered) || '').toLowerCase();
+    if (/vendor-writing/.test(slugs) || /vendor writing/.test(names)) return 'placeholder-pencil.svg';
+    if (/vendor-spotlight|a-few-questions/.test(slugs)
+        || /\bq\s*&\s*a\b|q&amp;a|questions with|interview/.test(title)) return 'placeholder-chat.svg';
+    return 'placeholder-c.svg';
+  }
+
+  /* ---------- cover-story detection ----------
+     Front-page newspaper scans (tag `cover-story`, filenames like
+     `06.17.2026_Page_01.png`) carry "The Contributor" masthead across the top.
+     We flag them so they're cropped centred and the masthead is clipped. */
+  function isCoverStory(post) {
+    const terms = [].concat(...((post._embedded && post._embedded['wp:term']) || []));
+    if (terms.some(t => t && (t.slug === 'cover-story' || /cover[\s-]?story/i.test(t.name || '')))) return true;
+    return /page[_-]?0*1\b/i.test(getImage(post) || '');
+  }
+
+  /* ---------- placeholder (brand icon tile, by content type) ---------- */
   function placeholder(post) {
-    // Hash the slug so the same article ALWAYS shows the same placeholder
-    // across refreshes — but the set of articles gets a varied mix.
-    const slug = (post && post.slug) || (post && post.id) || '';
-    let hash = 0;
-    for (let i = 0; i < slug.length; i++) hash = ((hash << 5) - hash + slug.charCodeAt(i)) | 0;
-    const variant = Math.abs(hash) % 3;
-    const assets = ['logo-c.png', 'placeholder-chat.svg', 'placeholder-pencil.svg'];
-    const file = assets[variant];
-    return el('div', { class: 'placeholder placeholder-' + variant, style:
+    const file = iconForPost(post);
+    return el('div', { class: 'placeholder', style:
       `background: var(--yellow); position: relative; overflow: hidden; width: 100%; height: 100%;`
     },
       el('div', { style:
@@ -1508,7 +1533,17 @@
     const src = getImage(post);
     const wrap = el('div', { class: 'img-frame' });
     if (src) {
-      wrap.appendChild(el('img', { crossorigin: 'anonymous', alt: decode(post.title.rendered), class: 'img', loading: idx < 2 ? 'eager' : 'lazy', src }));
+      // Cover-story scans are cropped centred (masthead clipped) and opt out of
+      // smart-crop so face-detection can't pull the frame back up to the masthead.
+      const cover = isCoverStory(post);
+      wrap.appendChild(el('img', {
+        crossorigin: 'anonymous',
+        alt: decode(post.title.rendered),
+        class: cover ? 'img is-cover' : 'img',
+        loading: idx < 2 ? 'eager' : 'lazy',
+        'data-no-smartcrop': cover ? '1' : null,
+        src
+      }));
     } else {
       wrap.appendChild(placeholder(post));
     }

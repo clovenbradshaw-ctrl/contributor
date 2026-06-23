@@ -288,6 +288,14 @@
     height: auto;
     border: 0;
   }
+  /* Cover-story scans: frame to 3:2 and crop centred so "The Contributor"
+     masthead is clipped (the default is height:auto, i.e. the whole page). */
+  .featured img.is-cover {
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    object-position: 50% 50% !important;
+  }
+  .related-thumb img.is-cover { object-position: 50% 50% !important; }
   .featured figcaption {
     font-family: var(--font-serif);
     font-style: italic;
@@ -996,6 +1004,14 @@
     }
     return media.source_url || null;
   }
+  /* Front-page newspaper scans (tag `cover-story`, filenames like
+     `06.17.2026_Page_01.png`) carry "The Contributor" masthead across the top —
+     flag them so they crop centred and the masthead is clipped out of frame. */
+  function isCoverStory(post) {
+    const terms = [].concat(...((post._embedded && post._embedded['wp:term']) || []));
+    if (terms.some(t => t && (t.slug === 'cover-story' || /cover[\s-]?story/i.test(t.name || '')))) return true;
+    return /page[_-]?0*1\b/i.test(getImage(post) || '');
+  }
   function getCaption(post) {
     const m = post._embedded && post._embedded['wp:featuredmedia'];
     if (!m || !m[0]) return null;
@@ -1072,6 +1088,12 @@
     if (img) {
       $('featured').hidden = false;
       $('featured-img').crossOrigin = 'anonymous';
+      // Cover-story scans crop centred and opt out of smart-crop so the masthead
+      // stays clipped.
+      if (isCoverStory(post)) {
+        $('featured-img').classList.add('is-cover');
+        $('featured-img').setAttribute('data-no-smartcrop', '1');
+      }
       $('featured-img').src = img;
       $('featured-img').alt = decode(post.title.rendered);
       const cap = getCaption(post);
@@ -1164,8 +1186,9 @@
       card.className = 'related-card';
       card.href = 'article.html?slug=' + encodeURIComponent(p.slug);
       const thumbSrc = getImage(p);
+      const coverCls = thumbSrc && isCoverStory(p) ? ' class="is-cover" data-no-smartcrop="1"' : '';
       const thumb = thumbSrc
-        ? `<div class="related-thumb"><img crossorigin="anonymous" src="${thumbSrc}" alt=""></div>`
+        ? `<div class="related-thumb"><img crossorigin="anonymous"${coverCls} src="${thumbSrc}" alt=""></div>`
         : `<div class="related-thumb"><div class="ph"><img src="https://storage.googleapis.com/intelechia-content/Contributor%20C%20logo.png" alt=""></div></div>`;
       card.innerHTML = thumb + `
         <div class="related-body">
