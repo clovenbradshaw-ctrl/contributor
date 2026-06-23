@@ -4,6 +4,23 @@ _Status as of this session. Files: `index.html`, `article.html`, `page.html`, `t
 
 ---
 
+## 🆕 Follow-ups — cover-story clipping & content-type icons
+
+- **"The Contributor" masthead always clipped.** Front-page newspaper scans (tagged
+  `cover-story`, filenames like `06.17.2026_Page_01.png`) are now detected and cropped
+  **centred** so the masthead never shows — on the homepage hero/features, the card grid,
+  the cover-story filter, and the article page featured image + related thumbnails. These
+  images also opt out of smart-crop so face-detection can't pull the frame back up.
+- **Placeholder icons by content type** (instead of a random per-slug mix):
+  - **Vendor Writing → pencil**
+  - **Q&A / interviews / Vendor Spotlight → conversation bubble**
+  - **everything else (News, Features, columns) → blackletter C**
+  - The C now uses the vector `placeholder-c.svg`.
+- _Not touched: the search-modal thumbnails (tiny, secondary) — say the word if you want
+  the same clip/icons there._
+
+---
+
 ## 🆕 Walkthrough punch list — fixes in this round
 
 **Filters & navigation**

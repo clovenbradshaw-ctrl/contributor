@@ -173,6 +173,9 @@
   /* -------- public API -------- */
   async function apply(img) {
     if (!img || !img.src || img.dataset.cropApplied === '1') return;
+    // Cover-story scans are cropped centred on purpose (masthead clipped) — never
+    // let face-detection move the frame back toward "The Contributor" masthead.
+    if (img.hasAttribute('data-no-smartcrop') || img.classList.contains('is-cover')) return;
     img.dataset.cropApplied = '1';
 
     const cached = sessionStorage.getItem(CACHE_KEY + img.src);
