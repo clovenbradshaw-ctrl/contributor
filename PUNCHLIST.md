@@ -2,6 +2,47 @@
 
 _Status as of this session. Files: `index.html`, `article.html`, `page.html`, `team.html`._
 
+---
+
+## 🆕 Walkthrough punch list — fixes in this round
+
+**Filters & navigation**
+- Filter dropdown items now match the card section labels (charcoal by default → blue + underline on hover/active).
+- Filter popover closes on outside click **and** on `Esc`.
+- Navbar no longer shifts between pages — the scrollbar gutter is always reserved (`overflow-y: scroll`), so short filtered views and long pages stay aligned.
+- On the dark **Our Values** page the dark subnav blended into the band below it; added a sunflower hairline so the navbar stays distinct.
+
+**Contributors / filtered views** (Vendor Spotlight, a byline, a category)
+- Render as a clean, uniform **3-up grid** — no headline hero, no second feature.
+- The **"Looking for a Paper?"** promo is hidden in filtered views.
+
+**Hero / featured article**
+- The headline hero now shows the most recent post that actually **has a hero image** (never a bare placeholder).
+- Both feature images are **crop-to-fill** (3:2) with face-aware centring; captions retained.
+
+**Vendor Spotlight**
+- Replaced the plain star with the **badge-and-star "spotlight" seal** from the design (all four templates).
+
+**Images**
+- Images inside WordPress lists/galleries no longer render with **list bullets** (`:has(img)` + `blocks-gallery-grid`). Verified on *the-spirit-of-small-town-pride* and the Donate galleries.
+
+**About / Our Values**
+- Removed both yellow divider bars (under "Our Values" and under "Our Team").
+- Flipped the charcoals: **darker** band background (`#181818`), **lighter** info boxes (`#2c2c2c`).
+
+**Mobile / responsive**
+- Fixed the broken mobile layout: the hero's fixed `720px` image column overflowed because `#hero-slot .feature` out-specified the `.feature` mobile override. No horizontal overflow now at 390 / 768 px across all templates.
+- Mobile footer kept left-aligned (per design) with hairline rules between the stacked sections.
+
+### ⏳ Deferred — needs Will / a design export
+- **Hero treatment** — confirm with Will what should be featured.
+- **Events page** — full redesign (skipped for now).
+- **Nashville Experience / Volunteer** — custom CTAs (Unseen Nashville Tours, Join Our Board, the "wrong" button) need designs.
+- **Custom icons** ("vendor writing", "learn more", …) — need direction on where each should be used.
+- **WordPress background images** by post type — discuss with Will.
+
+---
+
 ## ✅ Done
 
 ### Homepage cards

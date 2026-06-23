@@ -88,6 +88,9 @@
 
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  /* Reserve the scrollbar gutter so the nav doesn't shift between pages. */
+  html { overflow-y: scroll; }
+  body { overflow-x: hidden; }
 
   body {
     background: var(--white);
@@ -367,6 +370,12 @@
   .article-prose h3 { font-size: 26px; }
   .article-prose ul, .article-prose ol { margin: 0 0 22px; padding-left: 24px; }
   .article-prose li { margin-bottom: 8px; }
+  /* Image lists/galleries must not render bullets next to the images. */
+  .article-prose ul:has(img), .article-prose ol:has(img) { list-style: none; padding-left: 0; }
+  .article-prose li:has(img) { list-style: none; }
+  .article-prose ul.wp-block-gallery,
+  .article-prose ul.blocks-gallery-grid,
+  .article-prose .blocks-gallery-grid { list-style: none; padding-left: 0; }
   .article-prose img,
   .article-prose figure {
     max-width: 100% !important;
@@ -650,8 +659,12 @@
   footer.site .foot-mission .colophon { margin-top: auto; padding-top: 56px; text-align: left; border: 0; }
   footer.site .foot-contact h5:first-child { margin-top: 0; }
   @media (max-width: 880px) {
-    footer.site .cols { grid-template-columns: 1fr; gap: 32px; }
+    footer.site .cols { grid-template-columns: 1fr; gap: 0; }
     footer.site .foot-mission .colophon { margin-top: 28px; padding-top: 0; }
+    /* Stacked footer sections separated by hairline rules (left-aligned). */
+    footer.site .cols > div { padding: 28px 0; }
+    footer.site .cols > div:first-child { padding-top: 8px; }
+    footer.site .cols > div + div { border-top: 1px solid rgba(255,255,255,.16); }
   }
 </style>
 </head>
@@ -801,7 +814,7 @@
       Become a Vendor
     </a>
     <a href="index.html?tag=vendor-spotlight">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.2L18 8l-3 3.4.7 4.6L12 14l-3.7 2 .7-4.6L6 8l4.2-.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3"/><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3" transform="rotate(45 12 12)"/><path d="M12.00,8.50 12.85,10.83 15.33,10.92 13.38,12.45 14.06,14.83 12.00,13.45 9.94,14.83 10.62,12.45 8.67,10.92 11.15,10.83Z" fill="currentColor" stroke="none"/></svg>
       Vendor Spotlight
     </a>
   </div>

@@ -88,6 +88,9 @@
 
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  /* Reserve the scrollbar gutter so the nav doesn't shift between pages. */
+  html { overflow-y: scroll; }
+  body { overflow-x: hidden; }
 
   body {
     background: var(--white);
@@ -252,6 +255,13 @@
 
   .page-body ul, .page-body ol { margin: 0 0 22px; padding-left: 24px; }
   .page-body li { margin-bottom: 8px; }
+  /* Image lists/galleries from WP must not render list bullets next to the
+     images (the "images showing as bullet points" bug). */
+  .page-body ul:has(img), .page-body ol:has(img) { list-style: none; padding-left: 0; }
+  .page-body li:has(img) { list-style: none; }
+  .page-body ul.wp-block-gallery,
+  .page-body ul.blocks-gallery-grid,
+  .page-body .blocks-gallery-grid { list-style: none; padding-left: 0; }
 
   /* WP image alignment — two-column layouts */
   .page-body img,
@@ -592,8 +602,12 @@
   footer.site .foot-mission .colophon { margin-top: auto; padding-top: 56px; text-align: left; border: 0; }
   footer.site .foot-contact h5:first-child { margin-top: 0; }
   @media (max-width: 880px) {
-    footer.site .cols { grid-template-columns: 1fr; gap: 32px; }
+    footer.site .cols { grid-template-columns: 1fr; gap: 0; }
     footer.site .foot-mission .colophon { margin-top: 28px; padding-top: 0; }
+    /* Stacked footer sections separated by hairline rules (left-aligned). */
+    footer.site .cols > div { padding: 28px 0; }
+    footer.site .cols > div:first-child { padding-top: 8px; }
+    footer.site .cols > div + div { border-top: 1px solid rgba(255,255,255,.16); }
   }
 </style>
 </head>
@@ -709,7 +723,7 @@
   <div class="wrap">
     <a href="page.html?slug=find-a-vendor"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22s8-7.58 8-13a8 8 0 1 0-16 0c0 5.42 8 13 8 13z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.5"/></svg>Find a Paper</a>
     <a href="page.html?slug=become-a-vendor"><svg viewBox="0 0 24 24" fill="none"><circle cx="9" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="9" r="2.2" stroke="currentColor" stroke-width="1.5"/><path d="M3 19c0-3 3-5 6-5s6 2 6 5M14 14c2 .3 4.5 1.7 5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>Become a Vendor</a>
-    <a href="index.html?tag=vendor-spotlight"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.8 4.2L18 8l-3 3.4.7 4.6L12 14l-3.7 2 .7-4.6L6 8l4.2-.8L12 3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Vendor Spotlight</a>
+    <a href="index.html?tag=vendor-spotlight"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3"/><rect x="6.2" y="6.2" width="11.6" height="11.6" rx="3" transform="rotate(45 12 12)"/><path d="M12.00,8.50 12.85,10.83 15.33,10.92 13.38,12.45 14.06,14.83 12.00,13.45 9.94,14.83 10.62,12.45 8.67,10.92 11.15,10.83Z" fill="currentColor" stroke="none"/></svg>Vendor Spotlight</a>
   </div>
 </div>
 
