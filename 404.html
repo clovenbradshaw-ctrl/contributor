@@ -79,7 +79,10 @@
 
   // -- WP admin / system endpoints — let WP handle them
   if (/^(wp-admin|wp-login|wp-json|wp-content|feed|comments|xmlrpc)/.test(path)) {
-    location.replace('https://thecontributor.org/' + path + '/' + search + hash);
+    // Don't append a trailing slash to file URLs (e.g. wp-content asset paths),
+    // which would turn /wp-content/uploads/img.jpg into …img.jpg/ and 404.
+    var sep = /\.\w+$/.test(path) ? '' : '/';
+    location.replace('https://thecontributor.org/' + path + sep + search + hash);
     return;
   }
 
